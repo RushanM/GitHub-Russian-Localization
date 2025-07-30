@@ -42,7 +42,7 @@ const DOMObservers = {
 
     // Обработка изменений атрибутов
     handleAttributeChanges: function (element, translations) {
-        // Переводим атрибуты aria-label, placeholder и title
+        // переводим атрибуты aria-label, placeholder и title
         ['aria-label', 'placeholder', 'title'].forEach(attr => {
             if (element.hasAttribute(attr)) {
                 const originalText = element.getAttribute(attr);
@@ -67,10 +67,10 @@ const DOMObservers = {
         // Трансформируем строки с автором темы
         this.transformIssueAuthorStrings(translations);
 
-        // Переводим текстовые узлы в добавленном элементе
+        // переводим текстовые узлы в добавленном элементе
         this.translateTextNodesInElement(element, translations);
 
-        // Переводим атрибуты
+        // переводим атрибуты
         this.translateAttributes(element, translations);
     },
 

@@ -159,7 +159,7 @@ function initTranslation() {
                         // Обходим теневой DOM
                         collectTextNodes(el.shadowRoot);
 
-                        // Переводим каждый текстовый узел
+                        // переводим каждый текстовый узел
                         shadowTextNodes.forEach(textNode => {
                             const originalText = textNode.textContent.trim();
                             // Ищем паттерны времени
@@ -353,7 +353,7 @@ function initTranslation() {
                     el.textContent = translatedText;
                 } else if (onDateMatch) {
                     // Обрабатываем формат «on Apr 12, 2025»
-                    // Переводим английское название месяца на русский
+                    // переводим английское название месяца на русский
                     const dateText = onDateMatch[1];
                     const monthMapping = {
                         Jan: 'января',
@@ -836,14 +836,14 @@ function initTranslation() {
                 }
             });
 
-            // Переводим заголовок в диалоговом окне отмены звезды
+            // переводим заголовок в диалоговом окне отмены звезды
             document.querySelectorAll('.Box-title').forEach(title => {
                 if (title.textContent.trim() === 'Unstar this repository?') {
                     title.textContent = translations["Unstar this repository?"] || 'Убрать звезду с этого репозитория?';
                 }
             });
 
-            // Переводим кнопку Unstar в диалоговом окне
+            // переводим кнопку Unstar в диалоговом окне
             document.querySelectorAll('.btn-danger.btn').forEach(btn => {
                 if (btn.textContent.trim() === 'Unstar') {
                     btn.textContent = translations["Unstar"] || 'Убрать звезду';
@@ -1044,7 +1044,7 @@ function initTranslation() {
                         relativeTime.textContent = translatedText;
                     } else if (onDateMatch) {
                         // Обрабатываем формат «on Apr 12, 2025»
-                        // Переводим английское название месяца на русский
+                        // переводим английское название месяца на русский
                         const dateText = onDateMatch[1];
                         const monthMapping = {
                             Jan: 'января',
@@ -1089,6 +1089,27 @@ function initTranslation() {
             });
         }
 
+        function translateDashboardBreadcrumbs() {
+            // переводим основную крошку
+            document.querySelectorAll('.AppHeader-context-item-label').forEach(el => {
+                if (el.textContent.trim() === 'Dashboard' && translations['Dashboard']) {
+                    el.textContent = translations['Dashboard'];
+                }
+            });
+            // переводим выпадающее меню
+            document.querySelectorAll('.ActionListItem-label').forEach(el => {
+                if (el.textContent.trim() === 'Dashboard' && translations['Dashboard']) {
+                    el.textContent = translations['Dashboard'];
+                }
+            });
+            // переводим tool-tip
+            document.querySelectorAll('tool-tip[role="tooltip"], tool-tip.sr-only').forEach(el => {
+                if (el.textContent.trim() === 'Dashboard' && translations['Dashboard']) {
+                    el.textContent = translations['Dashboard'];
+                }
+            });
+        }
+
         const feedTitleEl = document.querySelector('[data-target="feed-container.feedTitle"]');
         if (feedTitleEl && window.dashboardHomeTranslation) {
             feedTitleEl.textContent = window.dashboardHomeTranslation;
@@ -1110,8 +1131,8 @@ function initTranslation() {
             translateOpenCopilotMenu();
             translateStarButtons();
             translateRepositoryButtons();
-            translateLabelElements();
             translateIssueElements();
+            translateDashboardBreadcrumbs();
 
             // Перевод подвала
             document.querySelectorAll('p.color-fg-subtle.text-small.text-light').forEach(node => {
@@ -1206,6 +1227,7 @@ function initTranslation() {
         translateStarButtons();
         translateRepositoryButtons();
         translateIssueElements();
+        translateDashboardBreadcrumbs();
 
         // Замена «Filter»
         document.querySelectorAll('summary .octicon-filter').forEach(icon => {

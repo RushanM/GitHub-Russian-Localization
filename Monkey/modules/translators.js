@@ -10,7 +10,7 @@ const GitHubTranslator = {
     
     // Перевод текущей страницы
     translatePage: function() {
-        // Переводим статичные элементы
+        // переводим статичные элементы
         this.translateStaticElements();
         
         // Обработка специальных случаев
@@ -114,7 +114,7 @@ const GitHubTranslator = {
     // Обработка элементов на панели управления (dashboard)
     processDashboard: function() {
         if (window.location.pathname === '/' || window.location.pathname === '/dashboard') {
-            // Переводим списки репозиториев и других элементов
+            // переводим списки репозиториев и других элементов
             this.translateRepositoryLists();
             this.translateActivityFeed();
         }
@@ -123,7 +123,7 @@ const GitHubTranslator = {
     // Обработка страницы репозитория
     processRepositoryPage: function() {
         if (window.location.pathname.match(/\/[^\/]+\/[^\/]+\/?$/)) {
-            // Переводим специфичные элементы репозитория
+            // переводим специфичные элементы репозитория
             this.translateRepoTabs();
             this.translateRepoSidebar();
         }
@@ -132,7 +132,7 @@ const GitHubTranslator = {
     // Обработка страницы профиля
     processProfilePage: function() {
         if (window.location.pathname.match(/^\/[^\/]+\/?$/)) {
-            // Переводим элементы профиля
+            // переводим элементы профиля
             this.translateProfileStatistics();
         }
     },

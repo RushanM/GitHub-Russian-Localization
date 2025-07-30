@@ -47,6 +47,33 @@
             // Запускаем перевод и наблюдение за DOM
             GitHubTranslator.init(translations);
             DOMObservers.startObserving(translations);
+
+            // блок для перевода Dashboard
+            function translateDashboardBreadcrumbs() {
+                // переводим основную крошку
+                document.querySelectorAll('.AppHeader-context-item-label').forEach(el => {
+                    if (el.textContent.trim() === 'Dashboard' && translations['Dashboard']) {
+                        el.textContent = translations['Dashboard'];
+                    }
+                });
+                // переводим выпадающее меню
+                document.querySelectorAll('.ActionListItem-label').forEach(el => {
+                    if (el.textContent.trim() === 'Dashboard' && translations['Dashboard']) {
+                        el.textContent = translations['Dashboard'];
+                    }
+                });
+                // переводим tool-tip
+                document.querySelectorAll('tool-tip[role="tooltip"], tool-tip.sr-only').forEach(el => {
+                    if (el.textContent.trim() === 'Dashboard' && translations['Dashboard']) {
+                        el.textContent = translations['Dashboard'];
+                    }
+                });
+            }
+
+            // Вызываем перевод сразу и при мутациях
+            translateDashboardBreadcrumbs();
+            const dashboardObserver = new MutationObserver(translateDashboardBreadcrumbs);
+            dashboardObserver.observe(document.body, { childList: true, subtree: true });
             
             // Вызываем трансформацию строк с автором темы при загрузке страницы
             DOMObservers.transformIssueAuthorStrings(translations);
@@ -54,6 +81,7 @@
             // Устанавливаем интервал для периодической проверки новых строк с автором
             setInterval(() => {
                 DOMObservers.transformIssueAuthorStrings(translations);
+                translateDashboardBreadcrumbs();
             }, 2000);
         });
 })();
