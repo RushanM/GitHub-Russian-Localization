@@ -1,8 +1,8 @@
-// Проверка включения/выключения перевода
+// проверка включения/выключения перевода
 let translationEnabled = true;
 let observer = null;
 
-// Проверяем сохранённое состояние при загрузке
+// проверяем сохранённое состояние при загрузке
 browser.storage.local.get('enabled').then(result => {
     translationEnabled = result.enabled !== undefined ? result.enabled : true;
     if (translationEnabled) {
@@ -10,7 +10,7 @@ browser.storage.local.get('enabled').then(result => {
     }
 });
 
-// Слушаем сообщения от popup.js
+// слушаем сообщения от popup.js
 browser.runtime.onMessage.addListener(function (message) {
     if (message.action === "toggleTranslation") {
         translationEnabled = message.enabled;
@@ -24,10 +24,10 @@ browser.runtime.onMessage.addListener(function (message) {
     return Promise.resolve({ response: "Состояние изменено" });
 });
 
-// Функция отключения перевода
+// функция отключения перевода
 function disableTranslation() {
     if (observer) {
-        // Останавливаем наблюдатель
+        // останавливаем наблюдатель
         observer.disconnect();
         observer = null;
     }
@@ -35,7 +35,7 @@ function disableTranslation() {
     window.location.reload();
 }
 
-// Функция инициализации всего перевода
+// функция инициализации всего перевода
 function initTranslation() {
     'use strict';
 
@@ -44,14 +44,14 @@ function initTranslation() {
     interFontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap';
     document.head.appendChild(interFontLink);
 
-    // Загружаем переводы из удалённого файла rus_p.json и объединяем все секции
+    // загружаем переводы из удалённого файла rus_p.json и объединяем все секции
     let translations = {};
     fetch("https://raw.githubusercontent.com/RushanM/GitHub-Russian-Translation/refs/heads/master/%D0%9E%D0%B1%D1%89%D0%B5%D0%B5/rus_p.json")
         .then(response => response.json())
         .then(data => {
-            // Сохраняем перевод из dashboard для Chat with Copilot
+            // сохраняем перевод из dashboard для Chat with Copilot
             window.dashboardCopilotTranslation = data.dashboard["Chat with Copilot"];
-            // Сохраняем перевод из dashboard для Home
+            // сохраняем перевод из dashboard для Home
             window.dashboardHomeTranslation = data.dashboard["Home"];
             translations = Object.assign(
                 {},
@@ -87,10 +87,10 @@ function initTranslation() {
             });
         }
 
-        // Функция для перевода абсолютного времени во всплывающей подсказке, например:
+        // функция для перевода абсолютного времени во всплывающей подсказке, например:
         // «Feb 24, 2025, 3:09 PM GMT+3» → «24 февраля 2025, 15:09 по московскому времени»
         function translateAbsoluteTime(text) {
-            // Маппирование месяцев берём из файла с переводами
+            // маппирование месяцев берём из файла с переводами
             const monthMapping = translations.months || {
                 Jan: 'января',
                 Feb: 'февраля',
@@ -106,8 +106,8 @@ function initTranslation() {
                 Dec: 'декабря'
             };
 
-            // Регулярное выражение для извлечения компонентов времени
-            // Пример: Feb 24, 2025, 3:09 PM GMT+3
+            // регулярное выражение для извлечения компонентов времени
+            // пример: Feb 24, 2025, 3:09 PM GMT+3
             const regex = /^([A-Z][a-z]{2}) (\d{1,2}), (\d{4}), (\d{1,2}):(\d{2})\s*(AM|PM)\s*GMT\+3$/;
             const match = text.match(regex);
             if (match) {
@@ -118,35 +118,35 @@ function initTranslation() {
                 const minute = match[5];
                 const period = match[6];
 
-                // Преобразование в 24-часовой формат
+                // преобразование в 24-часовой формат
                 if (period === 'PM' && hour !== 12) {
                     hour += 12;
                 } else if (period === 'AM' && hour === 12) {
                     hour = 0;
                 }
-                // Форматирование часов с ведущим нулём
+                // форматирование часов с ведущим нулём
                 const hourStr = hour < 10 ? '0' + hour : hour.toString();
                 const monthRu = monthMapping[monthEn] || monthEn;
 
-                // Используем перевод из файла переводов
+                // используем перевод из файла переводов
                 const byMoscowTime = translations.time?.by_moscow_time || "по московскому времени";
                 return `${day} ${monthRu} ${year}, ${hourStr}:${minute} ${byMoscowTime}`;
             }
             return text;
         }
 
-        // Функция для перевода элементов <relative-time>
+        // функция для перевода элементов <relative-time>
         function translateRelativeTimes() {
             const timeElements = document.querySelectorAll('relative-time');
             timeElements.forEach(el => {
-                // Если элемент уже переведён в основном DOM, проверяем его теневой DOM
+                // если элемент уже переведён в основном DOM, проверяем его теневой DOM
                 if (el.getAttribute('data-translated')) {
-                    // Проверяем наличие теневого корня и пытаемся перевести его содержимое
+                    // проверяем наличие теневого корня и пытаемся перевести его содержимое
                     if (el.shadowRoot) {
-                        // Получаем текстовые узлы из теневого корня
+                        // получаем текстовые узлы из теневого корня
                         const shadowTextNodes = [];
 
-                        // Функция для рекурсивного обхода теневого DOM
+                        // функция для рекурсивного обхода теневого DOM
                         function collectTextNodes(node) {
                             if (node.nodeType === Node.TEXT_NODE) {
                                 shadowTextNodes.push(node);
@@ -162,7 +162,7 @@ function initTranslation() {
                         // переводим каждый текстовый узел
                         shadowTextNodes.forEach(textNode => {
                             const originalText = textNode.textContent.trim();
-                            // Ищем паттерны времени
+                            // ищем паттерны времени
                             const hoursAgoMatch = originalText.match(/(\d+)\s+hours?\s+ago/);
                             const minutesAgoMatch = originalText.match(/(\d+)\s+minutes?\s+ago/);
                             const daysAgoMatch = originalText.match(/(\d+)\s+days?\s+ago/);
@@ -176,7 +176,7 @@ function initTranslation() {
                                 const hours = parseInt(hoursAgoMatch[1], 10);
                                 let translatedText;
 
-                                // Правильное склонение
+                                // правильное склонение
                                 if (hours === 1) {
                                     translatedText = translations.time?.hour_singular || "1 час назад";
                                 } else if (hours >= 2 && hours <= 4) {
@@ -193,7 +193,7 @@ function initTranslation() {
                                 const days = parseInt(daysAgoMatch[1], 10);
                                 let translatedText;
 
-                                // Правильное склонение
+                                // правильное склонение
                                 if (days === 1) {
                                     translatedText = translations.time?.day_singular || "1 день назад";
                                 } else if (days >= 2 && days <= 4) {
@@ -210,7 +210,7 @@ function initTranslation() {
                                 const weeks = parseInt(weeksAgoMatch[1], 10);
                                 let translatedText;
 
-                                // Правильное склонение
+                                // правильное склонение
                                 if (weeks === 1) {
                                     translatedText = translations.time?.week_singular || "1 неделю назад";
                                 } else if (weeks >= 2 && weeks <= 4) {
@@ -234,11 +234,11 @@ function initTranslation() {
                                     translations.time?.yesterday || "вчера"
                                 );
                             } else if (shortDateMatch) {
-                                // Обработка формата «on Mar 13»
+                                // обработка формата «on Mar 13»
                                 const monthEn = shortDateMatch[1];
                                 const day = shortDateMatch[2];
 
-                                // Используем словарь месяцев из файла переводов
+                                // используем словарь месяцев из файла переводов
                                 const monthRu = translations.months?.[monthEn] || monthEn;
                                 const translatedDate = `${day} ${monthRu}`;
 
@@ -247,14 +247,14 @@ function initTranslation() {
                                     `${day} ${monthRu}`
                                 );
                             } else if (dateMatch) {
-                                // Если у нас полная дата в формате «April 11, 2025 10:27»
+                                // если у нас полная дата в формате «April 11, 2025 10:27»
                                 const monthEn = dateMatch[1];
                                 const day = dateMatch[2];
                                 const year = dateMatch[3];
                                 const hour = dateMatch[4];
                                 const minute = dateMatch[5];
 
-                                // Используем словарь месяцев из файла переводов
+                                // используем словарь месяцев из файла переводов
                                 const monthRu = translations.months?.[monthEn] || monthEn;
                                 const translatedDate = `${day} ${monthRu} ${year} ${hour}:${minute}`;
 
@@ -266,7 +266,7 @@ function initTranslation() {
                                 const minutes = parseInt(minutesAgoMatch[1], 10);
                                 let translatedText;
 
-                                // Правильное склонение
+                                // правильное склонение
                                 if (minutes === 1) {
                                     translatedText = translations.time?.minute_singular || "1 минуту назад";
                                 } else if (minutes >= 2 && minutes <= 4) {
@@ -274,7 +274,7 @@ function initTranslation() {
                                 } else if (minutes >= 5 && minutes <= 20) {
                                     translatedText = (translations.time?.minute_many || "{count} минут назад").replace("{count}", minutes);
                                 } else {
-                                    // Для чисел 21, 31, 41… используем окончание как для 1
+                                    // для чисел 21, 31, 41… используем окончание как для 1
                                     const lastDigit = minutes % 10;
                                     const lastTwoDigits = minutes % 100;
 
@@ -297,16 +297,16 @@ function initTranslation() {
                     return;
                 }
 
-                // Перевод всплывающей подсказки, если атрибут title существует
+                // перевод всплывающей подсказки, если атрибут title существует
                 if (el.hasAttribute('title')) {
                     const originalTitle = el.getAttribute('title');
                     el.setAttribute('title', translateAbsoluteTime(originalTitle));
                 }
 
-                // Обработка текста даты/времени внутри элемента 
+                // обработка текста даты/времени внутри элемента 
                 const originalText = el.textContent.trim();
 
-                // Обработка относительного времени «x hours ago», «x minutes ago» и т. д.
+                // обработка относительного времени «x hours ago», «x minutes ago» и т. д.
                 const hoursAgoMatch = originalText.match(/(\d+)\s+hours?\s+ago/);
                 const minutesAgoMatch = originalText.match(/(\d+)\s+minutes?\s+ago/);
                 const onDateMatch = originalText.match(/on\s+([A-Za-z]+\s+\d+,\s+\d+)/);
@@ -315,7 +315,7 @@ function initTranslation() {
                     const hours = parseInt(hoursAgoMatch[1], 10);
                     let translatedText;
 
-                    // Правильное склонение
+                    // правильное склонение
                     if (hours === 1) {
                         translatedText = "1 час назад";
                     } else if (hours >= 2 && hours <= 4) {
@@ -329,7 +329,7 @@ function initTranslation() {
                     const minutes = parseInt(minutesAgoMatch[1], 10);
                     let translatedText;
 
-                    // Правильное склонение
+                    // правильное склонение
                     if (minutes === 1) {
                         translatedText = "1 минуту назад";
                     } else if (minutes >= 2 && minutes <= 4) {
@@ -337,7 +337,7 @@ function initTranslation() {
                     } else if (minutes >= 5 && minutes <= 20) {
                         translatedText = minutes + " минут назад";
                     } else {
-                        // Для чисел 21, 31, 41… используем окончание как для 1
+                        // для чисел 21, 31, 41… используем окончание как для 1
                         const lastDigit = minutes % 10;
                         const lastTwoDigits = minutes % 100;
 
@@ -352,7 +352,7 @@ function initTranslation() {
 
                     el.textContent = translatedText;
                 } else if (onDateMatch) {
-                    // Обрабатываем формат «on Apr 12, 2025»
+                    // обрабатываем формат «on Apr 12, 2025»
                     // переводим английское название месяца на русский
                     const dateText = onDateMatch[1];
                     const monthMapping = {
@@ -370,7 +370,7 @@ function initTranslation() {
                         Dec: 'декабря'
                     };
 
-                    // Регулярное выражение для поиска и замены месяца в строке даты
+                    // регулярное выражение для поиска и замены месяца в строке даты
                     const monthRegex = /([A-Za-z]{3})\s+(\d{1,2}),\s+(\d{4})/;
                     const dateMatch = dateText.match(monthRegex);
 
@@ -386,17 +386,17 @@ function initTranslation() {
                     }
                 }
 
-                // Пробуем перехватывать события мутации теневого корня
+                // пробуем перехватывать события мутации теневого корня
                 if (window.ShadowRoot && !el.getAttribute('data-shadow-observed')) {
                     try {
-                        // Пытаемся получить доступ к теневому DOM
+                        // пытаемся получить доступ к теневому DOM
                         const shadowRoot = el.shadowRoot;
                         if (shadowRoot) {
-                            // Добавляем наблюдатель за изменениями в теневом DOM
+                            // добавляем наблюдатель за изменениями в теневом DOM
                             const shadowObserver = new MutationObserver((mutations) => {
                                 mutations.forEach(mutation => {
                                     if (mutation.type === 'childList' || mutation.type === 'characterData') {
-                                        // Проходим по всем текстовым узлам в теневом DOM
+                                        // проходим по всем текстовым узлам в теневом DOM
                                         const textNodes = [];
                                         const walk = document.createTreeWalker(shadowRoot, NodeFilter.SHOW_TEXT);
 
@@ -407,11 +407,11 @@ function initTranslation() {
 
                                         textNodes.forEach(textNode => {
                                             const originalText = textNode.textContent;
-                                            // Ищем паттерны времени
+                                            // ищем паттерны времени
                                             if (originalText.match(/(\d+)\s+hours?\s+ago/)) {
                                                 const hours = parseInt(originalText.match(/(\d+)\s+hours?\s+ago/)[1], 10);
                                                 let translatedText;
-                                                // Правильное склонение
+                                                // правильное склонение
                                                 if (hours === 1) {
                                                     translatedText = translations.time?.hour_singular || "1 час назад";
                                                 } else if (hours >= 2 && hours <= 4) {
@@ -425,7 +425,7 @@ function initTranslation() {
                                                 const days = parseInt(originalText.match(/(\d+)\s+days?\s+ago/)[1], 10);
                                                 let translatedText;
 
-                                                // Правильное склонение для русского языка
+                                                // правильное склонение для русского языка
                                                 if (days === 1) {
                                                     translatedText = translations.time?.day_singular || "1 день назад";
                                                 } else if (days >= 2 && days <= 4) {
@@ -444,14 +444,14 @@ function initTranslation() {
                                                 const hour = match[4];
                                                 const minute = match[5];
 
-                                                // Используем словарь месяцев из файла переводов
+                                                // используем словарь месяцев из файла переводов
                                                 const monthRu = translations.months?.[monthEn] || monthEn;
                                                 textNode.textContent = `${day} ${monthRu} ${year} ${hour}:${minute}`;
                                             } else if (originalText.match(/(\d+)\s+minutes?\s+ago/)) {
                                                 const minutes = parseInt(originalText.match(/(\d+)\s+minutes?\s+ago/)[1], 10);
                                                 let translatedText;
 
-                                                // Правильное склонение
+                                                // правильное склонение
                                                 if (minutes === 1) {
                                                     translatedText = translations.time?.minute_singular || "1 минуту назад";
                                                 } else if (minutes >= 2 && minutes <= 4) {
@@ -480,21 +480,21 @@ function initTranslation() {
                     }
                 }
 
-                // Отмечаем элемент как переведённый
+                // отмечаем элемент как переведённый
                 el.setAttribute('data-translated', 'true');
             });
         }
 
         // функция для проверки, находится ли элемент в контейнере, где перевод нежелателен
         function isExcludedElement(el) {
-            // Если элемент находится внутри заголовков Markdown, то не переводим
+            // если элемент находится внутри заголовков Markdown, то не переводим
             if (el.closest('.markdown-heading')) return true;
-            // Если элемент находится внутри ячейки с названием каталога, то не переводим
+            // если элемент находится внутри ячейки с названием каталога, то не переводим
             if (el.closest('.react-directory-filename-column')) return true;
             return false;
         }
 
-        // Функция для перевода блока GitHub Education
+        // функция для перевода блока GitHub Education
         function translateEducationExperience() {
             document.querySelectorAll('.experience__action-item h3').forEach(el => {
                 if (el.textContent.includes('Add') && el.textContent.includes('repositories to a list')) {
@@ -548,7 +548,7 @@ function initTranslation() {
             );
 
             elements.forEach(el => {
-                // Если элемент подпадает под исключения, пропускаем его
+                // если элемент подпадает под исключения, пропускаем его
                 if (isExcludedElement(el)) return;
 
                 if (el.tagName === 'IMG' && el.alt.trim() in translations) {
@@ -567,24 +567,24 @@ function initTranslation() {
                         }
                     }
                 } else {
-                    // Часть функции translateTextContent(), отвечающая за обработку элементов с дочерними элементами
+                    // часть функции translateTextContent(), отвечающая за обработку элементов с дочерними элементами
                     if (el.childElementCount > 0) {
-                        // Сборка текстового содержания с учётом дочерних элементов
+                        // сборка текстового содержания с учётом дочерних элементов
                         let text = '';
                         el.childNodes.forEach(node => {
                             if (node.nodeType === Node.TEXT_NODE) {
                                 text += node.textContent;
                             } else if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'KBD') {
-                                text += '/'; // Добавление символа «/» из <kbd>
+                                text += '/'; // добавление символа «/» из <kbd>
                             }
                         });
                         text = text.trim();
                         if (translations[text]) {
-                            // Создание нового фрагмента с переводом и сохранение тега <kbd>, если перевод соответствует шаблону
+                            // создание нового фрагмента с переводом и сохранение тега <kbd>, если перевод соответствует шаблону
                             const newFragment = document.createDocumentFragment();
                             const parts = translations[text].split('<kbd class="AppHeader-search-kbd">/</kbd>');
                             newFragment.append(document.createTextNode(parts[0]));
-                            // Добавлять тег <kbd> только если есть вторая часть перевода
+                            // добавлять тег <kbd> только если есть вторая часть перевода
                             if (parts.length > 1 && parts[1] !== undefined) {
                                 const kbd = document.createElement('kbd');
                                 kbd.className = 'AppHeader-search-kbd';
@@ -592,7 +592,7 @@ function initTranslation() {
                                 newFragment.append(kbd);
                                 newFragment.append(document.createTextNode(parts[1]));
                             }
-                            // Очистка элемента и вставка нового контента
+                            // очистка элемента и вставка нового контента
                             el.innerHTML = '';
                             el.appendChild(newFragment);
                         }
@@ -611,7 +611,7 @@ function initTranslation() {
                                 }
                             }
                         });
-                        // Последный выхват строчек
+                        // последный выхват строчек
                         if (/\bstarred\b/.test(el.innerHTML) && !el.innerHTML.includes('starred-button-icon')) {
                             el.innerHTML = el.innerHTML.replace(/\bstarred\b/g, function (match) {
                                 return translations["starred"];
@@ -624,11 +624,11 @@ function initTranslation() {
                             el.innerHTML = el.innerHTML.replace(/\bNotifications\b/g, translations['Notifications']);
                         }
                     } else {
-                        // Сначала каждый узел
+                        // сначала каждый узел
                         el.childNodes.forEach(node => {
                             if (node.nodeType === Node.TEXT_NODE) {
                                 let originalText = node.textContent;
-                                // Переводы
+                                // переводы
                                 originalText = originalText.replace(/\bstarred\b/g, translations["starred"]);
                                 originalText = originalText.replace(/\badded a repository to\b/g, translations['added a repository to']);
                                 originalText = originalText.replace(/\bNotifications\b/g, translations['Notifications']);
@@ -636,7 +636,7 @@ function initTranslation() {
                             }
                         });
 
-                        // Если всё ещё остаётся, заменить внутренний HTML
+                        // если всё ещё остаётся, заменить внутренний HTML
                         if (/\bstarred\b/.test(el.innerHTML)) {
                             el.innerHTML = el.innerHTML.replace(/\bstarred\b/g, translations["starred"]);
                         }
@@ -673,14 +673,14 @@ function initTranslation() {
         }
 
         function translateAttributes() {
-            // Перевод placeholder
+            // перевод placeholder
             document.querySelectorAll('input[placeholder]').forEach(el => {
                 const text = el.getAttribute('placeholder');
                 if (translations[text]) {
                     el.setAttribute('placeholder', translations[text]);
                 }
             });
-            // Перевод aria-label
+            // перевод aria-label
             document.querySelectorAll('[aria-label]').forEach(el => {
                 const text = el.getAttribute('aria-label');
                 if (translations[text]) {

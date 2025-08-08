@@ -1,6 +1,7 @@
 // Утилиты для работы с переводами и форматированием
 const TranslationUtils = {
-    // Объединение секций перевода в единый словарь
+    // объединение секций перевода в единый словарь
+    // для обратной совместимости с форматом JSON
     mergeTranslations: function(data) {
         return Object.assign(
             {},
@@ -20,14 +21,37 @@ const TranslationUtils = {
         );
     },
     
-    // Склонения для репозиториев
+    // получение перевода с поддержкой Fluent
+    getTranslation: function(key, args = null) {
+        // если модуль Fluent доступен, используем его
+        if (window.FluentTranslationModule && window.FluentTranslationModule.hasMessage(key)) {
+            return window.FluentTranslationModule.getMessage(key, args);
+        } else if (window.FluentTranslationModule) {
+            // попробуем найти по устаревшему ключу
+            const legacyTranslation = window.FluentTranslationModule.getTranslationByLegacyKey(key);
+            if (legacyTranslation) {
+                return legacyTranslation;
+            }
+        }
+        
+        // запасной вариант: ищем в традиционных переводах
+        return this.translations[key] || key;
+    },
+    
+    // склонения для репозиториев
     getRepositoriesTranslation: function(count) {
+        // используем Fluent для склонения, если доступен
+        if (window.FluentTranslationModule) {
+            return window.FluentTranslationModule.formatRepositories(count);
+        }
+        
+        // запасной вариант: традиционное склонение
         if (count === 1) return `${count} репозиторий`;
         if (count >= 2 && count <= 4) return `${count} репозитория`;
         return `${count} репозиториев`;
     },
     
-    // Форматирование счетчиков звезд (замена k на К)
+    // форматирование счетчиков звезд (замена k на К)
     formatStarCount: function() {
         const starCounters = document.querySelectorAll('.Counter.js-social-count');
         starCounters.forEach(counter => {
@@ -39,12 +63,12 @@ const TranslationUtils = {
         });
     },
     
-    // Перевод абсолютного времени
+    // перевод абсолютного времени
     translateAbsoluteTime: function(text, translations) {
         const monthMapping = translations.months || {};
         
-        // Регулярное выражение для извлечения компонентов времени
-        // Пример: Feb 24, 2025, 3:09 PM GMT+3
+        // регулярное выражение для извлечения компонентов времени
+        // пример: Feb 24, 2025, 3:09 PM GMT+3
         const regex = /^([A-Z][a-z]{2}) (\d{1,2}), (\d{4}), (\d{1,2}):(\d{2})\s*(AM|PM)\s*GMT\+3$/;
         const match = text.match(regex);
         if (match) {
@@ -55,32 +79,32 @@ const TranslationUtils = {
             const minute = match[5];
             const period = match[6];
 
-            // Преобразование в 24-часовой формат
+            // преобразование в 24-часовой формат
             if (period === 'PM' && hour !== 12) {
                 hour += 12;
             } else if (period === 'AM' && hour === 12) {
                 hour = 0;
             }
-            // Форматирование часов с ведущим нулём
+            // форматирование часов с ведущим нулём
             const hourStr = hour < 10 ? '0' + hour : hour.toString();
             const monthRu = monthMapping[monthEn] || monthEn;
 
-            // Используем перевод из файла переводов
+            // используем перевод из файла переводов
             const byMoscowTime = translations.time?.by_moscow_time || "по московскому времени";
             return `${day} ${monthRu} ${year}, ${hourStr}:${minute} ${byMoscowTime}`;
         }
         return text;
     },
     
-    // Проверка, находится ли элемент в зоне, где перевод не нужен
+    // проверка, находится ли элемент в зоне, где перевод не нужен
     isExcludedElement: function(el) {
-        // Если элемент находится внутри заголовков Markdown, то не переводим
+        // если элемент находится внутри заголовков Markdown, то не переводим
         if (el.closest('.markdown-heading')) return true;
-        // Если элемент находится внутри ячейки с названием каталога, то не переводим
+        // если элемент находится внутри ячейки с названием каталога, то не переводим
         if (el.closest('.react-directory-filename-column')) return true;
         return false;
     }
 };
 
-// Экспортирование объекта утилит в глобальную область видимости
+// экспортирование объекта утилит в глобальную область видимости
 window.TranslationUtils = TranslationUtils;
