@@ -39,11 +39,6 @@ function disableTranslation() {
 function initTranslation() {
     'use strict';
 
-    const interFontLink = document.createElement('link');
-    interFontLink.rel = 'stylesheet';
-    interFontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap';
-    document.head.appendChild(interFontLink);
-
     // загружаем переводы из удалённого файла rus_p.json и объединяем все секции
     let translations = {};
     fetch("https://raw.githubusercontent.com/RushanM/GitHub-Russian-Translation/refs/heads/master/%D0%9E%D0%B1%D1%89%D0%B5%D0%B5/rus_p.json")
@@ -156,7 +151,7 @@ function initTranslation() {
                                 });
                             }
                         }
-                        // Обходим теневой DOM
+                        // обходим теневой DOM
                         collectTextNodes(el.shadowRoot);
 
                         // переводим каждый текстовый узел
@@ -692,7 +687,7 @@ function initTranslation() {
         function translateTooltips() {
             const copilotChatTooltip = document.querySelector('tool-tip[for="copilot-chat-header-button"]');
             if (copilotChatTooltip && copilotChatTooltip.textContent.trim() === 'Chat with Copilot') {
-                // Используем перевод из dashboard, сохранённый ранее
+                // используем перевод из dashboard, сохранённый ранее
                 copilotChatTooltip.textContent = window.dashboardCopilotTranslation;
             }
 
@@ -743,7 +738,7 @@ function initTranslation() {
                 }
             });
 
-            // Шрифт Inter
+            // шрифт Inter
             const educationNavBlock = document.querySelector('.d-flex.flex-justify-center.flex-md-justify-start.pb-5.pb-sm-7');
             if (educationNavBlock) {
                 educationNavBlock.style.fontFamily = 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif';
@@ -755,7 +750,7 @@ function initTranslation() {
         }
 
         function translateExperienceHeaderItems() {
-            // Перевод заголовков и текста в блоке experience__header__items
+            // перевод заголовков и текста в блоке experience__header__items
             document.querySelectorAll('.experience__header__item .experience__hero__heading').forEach(el => {
                 const text = el.textContent.trim();
                 if (translations[text]) {
@@ -763,7 +758,7 @@ function initTranslation() {
                 }
             });
 
-            // Перевод основного текста в блоке experience__header__items
+            // перевод основного текста в блоке experience__header__items
             document.querySelectorAll('.experience__header__item p.color-fg-on-emphasis').forEach(el => {
                 const text = el.textContent.trim();
                 if (translations[text]) {
@@ -771,7 +766,7 @@ function initTranslation() {
                 }
             });
 
-            // Шрифт Inter ко всему блоку для лучшей поддержки кириллицы
+            // шрифт Inter ко всему блоку для лучшей поддержки кириллицы
             document.querySelectorAll('.color-fg-on-emphasis').forEach(el => {
                 el.style.fontFamily = 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif';
             });
@@ -826,7 +821,7 @@ function initTranslation() {
         }
 
         function translateStarButtons() {
-            // Находим все span с классом d-inline внутри кнопок
+            // находим все span с классом d-inline внутри кнопок
             document.querySelectorAll('.BtnGroup-item .d-inline').forEach(span => {
                 const text = span.textContent.trim();
                 if (text === 'Star') {
@@ -852,7 +847,7 @@ function initTranslation() {
         }
 
         function translateRepositoryButtons() {
-            // Перевод кнопки Sponsor
+            // перевод кнопки Sponsor
             document.querySelectorAll('.Button-label .v-align-middle').forEach(span => {
                 const text = span.textContent.trim();
                 if (text === 'Sponsor') {
@@ -860,46 +855,46 @@ function initTranslation() {
                 }
             });
 
-            // Перевод кнопки Watch
+            // перевод кнопки Watch
             document.querySelectorAll('.prc-Button-Label-pTQ3x').forEach(span => {
                 if (span.textContent.trim().startsWith('Watch')) {
-                    // Сохраняем счётчик
+                    // сохраняем счётчик
                     const counter = span.querySelector('.Counter');
                     const counterHTML = counter ? counter.outerHTML : '';
 
-                    // Новый текст с сохранённым счетчиком
+                    // новый текст с сохранённым счетчиком
                     span.innerHTML = (translations["Watch"] || 'Следить') +
                         (counterHTML ? ' ' + counterHTML : '');
                 }
             });
 
-            // Перевод кнопки Fork
+            // перевод кнопки Fork
             document.querySelectorAll('.BtnGroup.d-flex').forEach(btnGroup => {
-                // Проверяем, что это непереведенная кнопка Fork
+                // проверяем, что это непереведенная кнопка Fork
                 if (btnGroup.textContent.includes('Fork') && !btnGroup.hasAttribute('data-translated-fork')) {
-                    // Сначала сохраним все важные элементы
+                    // сначала сохраним все важные элементы
                     const counter = btnGroup.querySelector('#repo-network-counter');
                     const details = btnGroup.querySelector('details');
 
-                    // Создаём функцию для глубокого обхода DOM-дерева
+                    // создаём функцию для глубокого обхода DOM-дерева
                     function translateNode(node) {
                         if (node.nodeType === Node.TEXT_NODE) {
-                            // Регулярное выражение для поиска слова «Fork» с сохранением пробелов
+                            // регулярное выражение для поиска слова «Fork» с сохранением пробелов
                             const regex = /(\s*)Fork(\s*)/g;
                             node.textContent = node.textContent.replace(regex,
                                 (match, before, after) => before + (translations["Fork"] || 'Разветвить') + after);
                         } else {
-                            // Рекурсивный обход всех дочерних узлов
+                            // рекурсивный обход всех дочерних узлов
                             for (let i = 0; i < node.childNodes.length; i++) {
                                 translateNode(node.childNodes[i]);
                             }
                         }
                     }
 
-                    // Запускаем перевод с корневого элемента
+                    // запускаем перевод с корневого элемента
                     translateNode(btnGroup);
 
-                    // Отмечаем элемент как обработанный
+                    // отмечаем элемент как обработанный
                     btnGroup.setAttribute('data-translated-fork', 'true');
                 }
             });
@@ -913,43 +908,43 @@ function initTranslation() {
             });
         }
 
-        // Функция для перевода статусов тем, кнопок редактирования и создания тем
+        // функция для перевода статусов тем, кнопок редактирования и создания тем
         function translateIssueElements() {
-            // Перевод статуса «Open» в темах
+            // перевод статуса «Open» в темах
             document.querySelectorAll('span[data-testid="header-state"]').forEach(el => {
                 if (el.textContent.trim() === 'Open' && translations['Open']) {
-                    // Сохраняем SVG-значок
+                    // сохраняем значок SVG
                     const svg = el.querySelector('svg');
                     const svgHTML = svg ? svg.outerHTML : '';
 
-                    // Заменяем текст, сохраняя значок
+                    // заменяем текст, сохраняя значок
                     el.innerHTML = svgHTML + translations['Open'];
                 }
-                // Перевод статуса «Closed» в темах
+                // перевод статуса Closed в темах
                 else if (el.textContent.trim() === 'Closed' && translations['Closed']) {
-                    // Сохраняем SVG-значок
+                    // сохраняем значок SVG
                     const svg = el.querySelector('svg');
                     const svgHTML = svg ? svg.outerHTML : '';
 
-                    // Заменяем текст, сохраняя значок
+                    // заменяем текст, сохраняя значок
                     el.innerHTML = svgHTML + translations['Closed'];
                 }
             });
 
-            // Перевод кнопки «Edit»
+            // перевод кнопки «Edit»
             document.querySelectorAll('.prc-Button-ButtonBase-c50BI .prc-Button-Label-pTQ3x').forEach(el => {
                 if (el.textContent.trim() === 'Edit' && translations['Edit']) {
                     el.textContent = translations['Edit'];
                 }
             });
 
-            // Перевод кнопки «New issue»
+            // перевод кнопки «New issue»
             document.querySelectorAll('.prc-Button-ButtonBase-c50BI .prc-Button-Label-pTQ3x').forEach(el => {
                 if (el.textContent.trim() === 'New issue' && translations['New issue']) {
                     el.textContent = translations['New issue'];
                 }
             });
-            // Трансформация строки вида «Пользователь opened 2 hours ago» в «Открыта Пользователь 2 часа назад»
+            // трансформация строки вида «Пользователь opened 2 hours ago» в «Открыта Пользователь 2 часа назад»
             document.querySelectorAll('.Box-sc-g0xbh4-0.dqmClk, [data-testid="issue-body-header-author"]').forEach(authorEl => {
                 // Ищем ближайший родительский контейнер, который содержит также подвал с «opened»
                 const container = authorEl.closest('.ActivityHeader-module__narrowViewportWrapper--Hjl75, .Box-sc-g0xbh4-0.koxHLL');
@@ -963,10 +958,10 @@ function initTranslation() {
                 const openedSpan = footer.querySelector('span');
                 const authorLink = authorEl.querySelector('a[data-testid="issue-body-header-author"], a[href*="/users/"]') || authorEl;
 
-                // Проверяем, что span содержит «opened»
+                // проверяем, что span содержит «opened»
                 if (!openedSpan || !openedSpan.textContent.includes('opened')) return;
 
-                // Получаем ссылку на время с relative-time
+                // получаем ссылку на время с relative-time
                 const timeLink = footer.querySelector('a[data-testid="issue-body-header-link"]');
                 if (!timeLink) return;
 
@@ -978,10 +973,10 @@ function initTranslation() {
                     // Если уже трансформировано, пропускаем
                     if (footer.getAttribute('data-ru-transformed')) return;
 
-                    // Отмечаем как трансформированное
+                    // отмечаем как трансформированное
                     footer.setAttribute('data-ru-transformed', 'true');
 
-                    // Создаём новую структуру
+                    // создаём новую структуру
                     // 1. Сохраняем автора
                     const authorClone = authorLink.cloneNode(true);
 
@@ -997,7 +992,7 @@ function initTranslation() {
                     // 5. Трансформируем текст времени
                     const originalTimeText = relativeTime.textContent;
 
-                    // Проверяем, содержит ли текст паттерн времени (например, «3 hours ago» или «on Apr 12, 2025»)
+                    // проверяем, содержит ли текст паттерн времени (например, «3 hours ago» или «on Apr 12, 2025»)
                     const hoursAgoMatch = originalTimeText.match(/(\d+)\s+hours?\s+ago/);
                     const minutesAgoMatch = originalTimeText.match(/(\d+)\s+minutes?\s+ago/);
                     const onDateMatch = originalTimeText.match(/on\s+([A-Za-z]+\s+\d+,\s+\d+)/);
@@ -1006,7 +1001,7 @@ function initTranslation() {
                         const hours = parseInt(hoursAgoMatch[1], 10);
                         let translatedText;
 
-                        // Правильное склонение
+                        // правильное склонение
                         if (hours === 1) {
                             translatedText = "Час назад";
                         } else if (hours >= 2 && hours <= 4) {
@@ -1020,7 +1015,7 @@ function initTranslation() {
                         const minutes = parseInt(minutesAgoMatch[1], 10);
                         let translatedText;
 
-                        // Правильное склонение
+                        // правильное склонение
                         if (minutes === 1) {
                             translatedText = "1 минуту назад";
                         } else if (minutes >= 2 && minutes <= 4) {
@@ -1043,7 +1038,7 @@ function initTranslation() {
 
                         relativeTime.textContent = translatedText;
                     } else if (onDateMatch) {
-                        // Обрабатываем формат «on Apr 12, 2025»
+                        // обрабатываем формат «on Apr 12, 2025»
                         // переводим английское название месяца на русский
                         const dateText = onDateMatch[1];
                         const monthMapping = {
@@ -1134,7 +1129,7 @@ function initTranslation() {
             translateIssueElements();
             translateDashboardBreadcrumbs();
 
-            // Перевод подвала
+            // перевод подвала
             document.querySelectorAll('p.color-fg-subtle.text-small.text-light').forEach(node => {
                 if (node.textContent.trim() === '© 2025 GitHub, Inc.') {
                     node.textContent = translations['© 2025 GitHub, Inc.'];
@@ -1173,21 +1168,21 @@ function initTranslation() {
                 }
             });
 
-            // Перевод для кнопки «Chat with Copilot»
+            // перевод для кнопки «Chat with Copilot»
             document.querySelectorAll('.ActionListItem-label').forEach(el => {
                 if (el.textContent.trim() === "Chat with Copilot" && translations["Chat with Copilot"]) {
                     el.textContent = translations["Chat with Copilot"];
                 }
             });
 
-            // Перевод описания «Start a new Copilot thread»
+            // перевод описания «Start a new Copilot thread»
             document.querySelectorAll('.QueryBuilder-ListItem-trailing').forEach(el => {
                 if (el.textContent.trim() === "Start a new Copilot thread" && translations["Start a new Copilot thread"]) {
                     el.textContent = translations["Start a new Copilot thread"];
                 }
             });
 
-            // Замена «added a repository to»
+            // замена «added a repository to»
             document.querySelectorAll('h3.h5.text-normal.color-fg-muted.d-flex.flex-items-center.flex-row.flex-nowrap.width-fit span.flex-1 span.flex-shrink-0').forEach(span => {
                 if (span.textContent.trim() === 'added a repository to') {
                     span.textContent = translations['added a repository to'];
@@ -1209,7 +1204,7 @@ function initTranslation() {
             });
         });
 
-        // Запуск
+        // запуск
         observerStarred.observe(document.body, { childList: true, subtree: true });
 
         // Начальное прохождение
@@ -1229,7 +1224,7 @@ function initTranslation() {
         translateIssueElements();
         translateDashboardBreadcrumbs();
 
-        // Замена «Filter»
+        // замена «Filter»
         document.querySelectorAll('summary .octicon-filter').forEach(icon => {
             const summary = icon.parentElement;
             if (summary) {

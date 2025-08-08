@@ -6,9 +6,26 @@ const FluentTranslationModule = {
     // загрузка файла FTL
     async loadTranslations(url) {
         try {
-            const response = await fetch(url);
-            const ftlContent = await response.text();
+            // проверяем, загружена ли библиотека Fluent
+            if (!window.FluentBundle) {
+                console.log('Библиотека Fluent не загружена, пытаюсь загрузить...');
+                await this.loadFluentLibrary();
+            }
             
+            // проверяем ещё раз после попытки загрузки
+            if (!window.FluentBundle) {
+                console.error('Не удалось загрузить библиотеку Fluent');
+                return false;
+            }
+            
+            // загружаем содержимое файла FTL
+            const response = await fetch(url);
+            if (!response.ok) {
+                console.error('Ошибка загрузки файла локализации:', response.statusText);
+                return false;
+            }
+            
+            const ftlContent = await response.text();
             await this.initFluent(ftlContent);
             return true;
         } catch (error) {
@@ -19,39 +36,65 @@ const FluentTranslationModule = {
     
     // инициализация Fluent с загруженным содержимым
     async initFluent(ftlContent) {
-        // динамическая загрузка библиотеки @fluent/bundle
-        if (!window.FluentBundle) {
-            await this.loadFluentLibrary();
+        try {
+            // проверяем, загружена ли библиотека Fluent
+            if (!window.FluentBundle) {
+                console.error('Библиотека Fluent не загружена в initFluent');
+                return null;
+            }
+            
+            const { FluentBundle, FluentResource } = window.FluentBundle;
+            
+            // создаём сборку с русской локализацией
+            const bundle = new FluentBundle('ru');
+            const resource = new FluentResource(ftlContent);
+            
+            // добавляем ресурс в сборку
+            const errors = bundle.addResource(resource);
+            if (errors.length) {
+                console.warn('Ошибки при синтаксическом анализе файла FTL:', errors);
+            }
+            
+            this._messages = bundle;
+            return bundle;
+        } catch (error) {
+            console.error('Ошибка при инициализации Fluent:', error);
+            return null;
         }
-        
-        const { FluentBundle, FluentResource } = window.FluentBundle;
-        
-        // создаём сборку с русской локализацией
-        const bundle = new FluentBundle('ru');
-        const resource = new FluentResource(ftlContent);
-        
-        // добавляем ресурс в сборку
-        const errors = bundle.addResource(resource);
-        if (errors.length) {
-            console.warn('Ошибки при синтаксическом анализе файла FTL:', errors);
-        }
-        
-        this._messages = bundle;
-        return bundle;
     },
     
     // загрузка библиотеки Fluent
     async loadFluentLibrary() {
+        // проверяем, если библиотека уже загружена
+        if (window.FluentBundle) {
+            return Promise.resolve();
+        }
+        
         return new Promise((resolve, reject) => {
-            const script = document.createElement('script');
-            script.src = 'https://unpkg.com/@fluent/bundle@0.19.1/index.js';
-            script.onload = () => {
-                resolve();
-            };
-            script.onerror = () => {
-                reject(new Error('Не удалось загрузить библиотеку Fluent'));
-            };
-            document.head.appendChild(script);
+            try {
+                // создаём скрипт для загрузки Fluent
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/@fluent/bundle@0.19.1/index.js';
+                script.async = true;
+                script.crossOrigin = 'anonymous';
+                
+                // обработчики событий для загрузки
+                script.onload = () => {
+                    console.log('Библиотека Fluent успешно загружена');
+                    resolve();
+                };
+                
+                script.onerror = (error) => {
+                    console.error('Не удалось загрузить библиотеку Fluent:', error);
+                    reject(new Error('Не удалось загрузить библиотеку Fluent'));
+                };
+                
+                // добавляем скрипт в документ
+                document.head.appendChild(script);
+            } catch (error) {
+                console.error('Ошибка при загрузке библиотеки Fluent:', error);
+                reject(error);
+            }
         });
     },
     

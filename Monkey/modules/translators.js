@@ -8,12 +8,12 @@ const GitHubTranslator = {
         this.translatePage();
     },
     
-    // Перевод текущей страницы
+    // перевод текущей страницы
     translatePage: function() {
         // переводим статичные элементы
         this.translateStaticElements();
         
-        // Обработка специальных случаев
+        // обработка специальных случаев
         this.processDashboard();
         this.processRepositoryPage();
         this.processProfilePage();
@@ -22,7 +22,7 @@ const GitHubTranslator = {
         TranslationUtils.formatStarCount();
     },
     
-    // Перевод статичных элементов страницы
+    // перевод статичных элементов страницы
     translateStaticElements: function() {
         // Базовый перевод текстовых узлов
         const textNodes = document.createTreeWalker(
@@ -43,18 +43,18 @@ const GitHubTranslator = {
         
         let currentNode;
         while (currentNode = textNodes.nextNode()) {
-            // Проверяем, не находится ли узел в исключенной зоне
+            // проверяем, не находится ли узел в исключенной зоне
             if (TranslationUtils.isExcludedElement(currentNode.parentElement)) {
                 continue;
             }
             
             const originalText = currentNode.textContent.trim();
-            // Пропускаем пустые узлы и узлы с числами
+            // пропускаем пустые узлы и узлы с числами
             if (!originalText || /^\d+$/.test(originalText)) {
                 continue;
             }
             
-            // Проверяем, есть ли прямой перевод
+            // проверяем, есть ли прямой перевод
             if (this.translations[originalText]) {
                 currentNode.textContent = currentNode.textContent.replace(
                     originalText, 
@@ -63,16 +63,16 @@ const GitHubTranslator = {
                 continue;
             }
             
-            // Проверяем сложные шаблоны
+            // проверяем сложные шаблоны
             this.translateTimeAndDates(currentNode);
         }
     },
     
-    // Перевод времени и дат
+    // перевод времени и дат
     translateTimeAndDates: function(node) {
         const text = node.textContent.trim();
         
-        // Перевод относительного времени
+        // перевод относительного времени
         const timeRegexes = [
             { pattern: /^(\d+) hours? ago$/, key: 'hour', count: match => parseInt(match[1]) },
             { pattern: /^(\d+) minutes? ago$/, key: 'minute', count: match => parseInt(match[1]) },
@@ -102,7 +102,7 @@ const GitHubTranslator = {
             }
         }
         
-        // Перевод абсолютного времени
+        // перевод абсолютного времени
         if (/^[A-Z][a-z]{2} \d{1,2}, \d{4}, \d{1,2}:\d{2}\s*(AM|PM)\s*GMT\+3$/.test(text)) {
             const translated = TranslationUtils.translateAbsoluteTime(text, this.translations);
             if (translated !== text) {
@@ -111,7 +111,7 @@ const GitHubTranslator = {
         }
     },
     
-    // Обработка элементов на панели управления (dashboard)
+    // обработка элементов на панели управления (dashboard)
     processDashboard: function() {
         if (window.location.pathname === '/' || window.location.pathname === '/dashboard') {
             // переводим списки репозиториев и других элементов
@@ -120,7 +120,7 @@ const GitHubTranslator = {
         }
     },
     
-    // Обработка страницы репозитория
+    // обработка страницы репозитория
     processRepositoryPage: function() {
         if (window.location.pathname.match(/\/[^\/]+\/[^\/]+\/?$/)) {
             // переводим специфичные элементы репозитория
@@ -129,7 +129,7 @@ const GitHubTranslator = {
         }
     },
     
-    // Обработка страницы профиля
+    // обработка страницы профиля
     processProfilePage: function() {
         if (window.location.pathname.match(/^\/[^\/]+\/?$/)) {
             // переводим элементы профиля
@@ -137,9 +137,9 @@ const GitHubTranslator = {
         }
     },
     
-    // Перевод списков репозиториев
+    // перевод списков репозиториев
     translateRepositoryLists: function() {
-        // Список заголовков разделов
+        // список заголовков разделов
         const sectionTitles = document.querySelectorAll('h2.h4');
         sectionTitles.forEach(title => {
             const text = title.textContent.trim();
@@ -149,7 +149,7 @@ const GitHubTranslator = {
         });
     },
     
-    // Перевод вкладок репозитория
+    // перевод вкладок репозитория
     translateRepoTabs: function() {
         const repoNavItems = document.querySelectorAll('.UnderlineNav-item');
         repoNavItems.forEach(item => {
@@ -161,7 +161,7 @@ const GitHubTranslator = {
         });
     },
     
-    // Перевод боковой панели репозитория
+    // перевод боковой панели репозитория
     translateRepoSidebar: function() {
         const sidebarItems = document.querySelectorAll('.BorderGrid-cell h2');
         sidebarItems.forEach(item => {
@@ -172,7 +172,7 @@ const GitHubTranslator = {
         });
     },
     
-    // Перевод статистики профиля
+    // перевод статистики профиля
     translateProfileStatistics: function() {
         const statsItems = document.querySelectorAll('.js-profile-editable-area .Counter');
         statsItems.forEach(item => {
@@ -189,7 +189,7 @@ const GitHubTranslator = {
         });
     },
     
-    // Перевод ленты активности
+    // перевод ленты активности
     translateActivityFeed: function() {
         const feedItems = document.querySelectorAll('.dashboard-feed .Box-row');
         feedItems.forEach(item => {
@@ -200,11 +200,11 @@ const GitHubTranslator = {
         });
     },
     
-    // Перевод отдельного элемента ленты активности
+    // перевод отдельного элемента ленты активности
     translateActivityItem: function(element) {
         const text = element.textContent;
         
-        // Перевод типичных действий
+        // перевод типичных действий
         const activities = [
             { en: 'contributed to', ru: this.translations.general?.['contributed to'] },
             { en: 'forked', ru: this.translations.general?.['forked'] },

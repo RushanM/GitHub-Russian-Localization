@@ -4,16 +4,33 @@ let observer = null;
 
 // загружаем библиотеку Fluent
 async function loadFluentLibrary() {
+    // проверяем, если библиотека уже загружена
+    if (window.FluentBundle) {
+        return Promise.resolve();
+    }
+    
     return new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = 'https://unpkg.com/@fluent/bundle@0.19.1/index.js';
-        script.onload = () => {
-            resolve();
-        };
-        script.onerror = () => {
-            reject(new Error('Не удалось загрузить библиотеку Fluent'));
-        };
-        document.head.appendChild(script);
+        try {
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/@fluent/bundle@0.19.1/index.js';
+            script.async = true;
+            script.crossOrigin = 'anonymous';
+            
+            script.onload = () => {
+                console.log('Библиотека Fluent успешно загружена');
+                resolve();
+            };
+            
+            script.onerror = (error) => {
+                console.error('Не удалось загрузить библиотеку Fluent:', error);
+                reject(new Error('Не удалось загрузить библиотеку Fluent'));
+            };
+            
+            document.head.appendChild(script);
+        } catch (error) {
+            console.error('Ошибка при загрузке библиотеки Fluent:', error);
+            reject(error);
+        }
     });
 }
 
@@ -55,13 +72,25 @@ async function loadFluentTranslations() {
     try {
         // загрузим библиотеку Fluent, если её ещё нет
         if (!window.FluentBundle) {
+            console.log('Библиотека Fluent не загружена, пытаюсь загрузить...');
             await loadFluentLibrary();
+        }
+        
+        // проверяем ещё раз после попытки загрузки
+        if (!window.FluentBundle) {
+            console.error('Не удалось загрузить библиотеку Fluent');
+            return null;
         }
         
         const { FluentBundle, FluentResource } = window.FluentBundle;
         
         // загружаем файл FTL
         const response = await fetch("https://raw.githubusercontent.com/RushanM/GitHub-Russian-Translation/refs/heads/master/%D0%9E%D0%B1%D1%89%D0%B5%D0%B5/ru-ru.ftl");
+        if (!response.ok) {
+            console.error('Ошибка загрузки файла локализации:', response.statusText);
+            return null;
+        }
+        
         const ftlContent = await response.text();
         
         // создаём сборку с русской локализацией
@@ -84,12 +113,6 @@ async function loadFluentTranslations() {
 // функция инициализации всего перевода
 async function initTranslation() {
     'use strict';
-
-    // добавляем шрифт Inter для лучшего отображения кириллицы
-    const interFontLink = document.createElement('link');
-    interFontLink.rel = 'stylesheet';
-    interFontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap';
-    document.head.appendChild(interFontLink);
 
     // сначала пробуем загрузить локализацию с файла Fluent
     const fluentBundle = await loadFluentTranslations();

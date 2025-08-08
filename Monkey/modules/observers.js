@@ -2,14 +2,14 @@
 const DOMObservers = {
     // Инициализация MutationObserver для отслеживания изменений DOM
     startObserving: function (translations) {
-        // Основной наблюдатель за DOM
+        // основной наблюдатель за DOM
         const observer = new MutationObserver((mutations) => {
             mutations.forEach(mutation => {
-                // Проверяем изменения в атрибутах
+                // проверяем изменения в атрибутах
                 if (mutation.type === 'attributes') {
                     this.handleAttributeChanges(mutation.target, translations);
                 }
-                // Проверяем новые добавленные узлы
+                // проверяем новые добавленные узлы
                 else if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
                     mutation.addedNodes.forEach(node => {
                         if (node.nodeType === Node.ELEMENT_NODE) {
@@ -34,13 +34,13 @@ const DOMObservers = {
         // Наблюдаем за изменениями заголовка страницы
         this.observePageTitle(translations);
 
-        // Трансформируем строки с автором темы при загрузке страницы
+        // трансформируем строки с автором темы при загрузке страницы
         this.transformIssueAuthorStrings(translations);
 
         return observer;
     },
 
-    // Обработка изменений атрибутов
+    // обработка изменений атрибутов
     handleAttributeChanges: function (element, translations) {
         // переводим атрибуты aria-label, placeholder и title
         ['aria-label', 'placeholder', 'title'].forEach(attr => {
@@ -52,19 +52,19 @@ const DOMObservers = {
             }
         });
     },
-    // Обработка новых элементов в DOM
+    // обработка новых элементов в DOM
     handleNewElement: function (element, translations) {
-        // Проверяем, не является ли элемент частью исключений
+        // проверяем, не является ли элемент частью исключений
         if (TranslationUtils.isExcludedElement(element)) {
             return;
         }
 
-        // Обрабатываем специфические элементы
+        // обрабатываем специфические элементы
         this.processHeaderElements(element, translations);
         this.processModalElements(element, translations);
         this.processTooltips(element, translations);
 
-        // Трансформируем строки с автором темы
+        // трансформируем строки с автором темы
         this.transformIssueAuthorStrings(translations);
 
         // переводим текстовые узлы в добавленном элементе
@@ -74,7 +74,7 @@ const DOMObservers = {
         this.translateAttributes(element, translations);
     },
 
-    // Перевод текстовых узлов внутри элемента
+    // перевод текстовых узлов внутри элемента
     translateTextNodesInElement: function (element, translations) {
         const textNodes = document.createTreeWalker(
             element,
@@ -100,7 +100,7 @@ const DOMObservers = {
             const originalText = currentNode.textContent.trim();
             if (!originalText) continue;
 
-            // Проверяем, есть ли прямой перевод
+            // проверяем, есть ли прямой перевод
             if (translations[originalText]) {
                 currentNode.textContent = currentNode.textContent.replace(
                     originalText,
@@ -109,7 +109,7 @@ const DOMObservers = {
                 continue;
             }
 
-            // Обрабатываем время и даты
+            // обрабатываем время и даты
             const text = currentNode.textContent.trim();
             if (/^(\d+) (hours?|minutes?|days?|weeks?) ago$/.test(text)) {
                 this.translateRelativeTime(currentNode, translations);
@@ -123,7 +123,7 @@ const DOMObservers = {
         }
     },
 
-    // Перевод атрибутов элемента
+    // перевод атрибутов элемента
     translateAttributes: function (element, translations) {
         const elementsWithAttrs = element.querySelectorAll('[aria-label], [placeholder], [title]');
         elementsWithAttrs.forEach(el => {
@@ -138,9 +138,9 @@ const DOMObservers = {
         });
     },
 
-    // Обработка элементов в заголовке
+    // обработка элементов в заголовке
     processHeaderElements: function (element, translations) {
-        // Поиск и перевод элементов в шапке
+        // поиск и перевод элементов в шапке
         const headerElements = element.querySelectorAll('.AppHeader-globalBar-item');
         headerElements.forEach(item => {
             // Ищем элементы меню в шапке
@@ -151,9 +151,9 @@ const DOMObservers = {
         });
     },
 
-    // Обработка модальных окон
+    // обработка модальных окон
     processModalElements: function (element, translations) {
-        // Перевод заголовков модальных окон
+        // перевод заголовков модальных окон
         const modalTitles = element.querySelectorAll('.Overlay-headerTitle');
         modalTitles.forEach(title => {
             if (translations[title.textContent.trim()]) {
@@ -161,7 +161,7 @@ const DOMObservers = {
             }
         });
 
-        // Перевод кнопок в модальных окнах
+        // перевод кнопок в модальных окнах
         const modalButtons = element.querySelectorAll('.Overlay-footer .btn');
         modalButtons.forEach(btn => {
             if (translations[btn.textContent.trim()]) {
@@ -170,7 +170,7 @@ const DOMObservers = {
         });
     },
 
-    // Обработка всплывающих подсказок
+    // обработка всплывающих подсказок
     processTooltips: function (element, translations) {
         const tooltips = element.querySelectorAll('.Tooltip, .tooltip');
         tooltips.forEach(tooltip => {
@@ -181,7 +181,7 @@ const DOMObservers = {
         });
     },
 
-    // Перевод относительного времени
+    // перевод относительного времени
     translateRelativeTime: function (node, translations) {
         const text = node.textContent.trim();
 
@@ -225,7 +225,7 @@ const DOMObservers = {
                     if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
                         mutation.addedNodes.forEach(node => {
                             if (node.nodeType === Node.ELEMENT_NODE) {
-                                // Перевод модальных окон с задержкой для полной загрузки
+                                // перевод модальных окон с задержкой для полной загрузки
                                 setTimeout(() => {
                                     this.handleNewElement(node, translations);
                                 }, 100);
@@ -244,7 +244,7 @@ const DOMObservers = {
 
     // Наблюдение за изменениями заголовка страницы
     observePageTitle: function (translations) {
-        // Сохраняем оригинальную функцию смены заголовка
+        // сохраняем оригинальную функцию смены заголовка
         const originalTitleSetter = Object.getOwnPropertyDescriptor(Document.prototype, 'title').set;
 
         // Устанавливаем свой перехватчик
@@ -264,7 +264,7 @@ const DOMObservers = {
         });
     },
 
-    // Трансформация строки с автором темы из формата «Автор Открыта 8 hours ago» в «Открыта Автор 8 часов назад»
+    // трансформация строки с автором темы из формата «Автор Открыта 8 hours ago» в «Открыта Автор 8 часов назад»
     transformIssueAuthorStrings: function (translations) {
         document.querySelectorAll('.Box-sc-g0xbh4-0.dqmClk, [data-testid="issue-body-header-author"]').forEach(authorEl => {
             // Ищем ближайший родительский контейнер с информацией об открытии темы
@@ -279,7 +279,7 @@ const DOMObservers = {
             const openedSpan = footer.querySelector('span');
             const authorLink = authorEl.querySelector('a[data-testid="issue-body-header-author"], a[href*="/users/"]') || authorEl;
 
-            // Проверяем span
+            // проверяем span
             if (!openedSpan) return;
 
             // Находим ссылку на время с relative-time
@@ -297,10 +297,10 @@ const DOMObservers = {
                 // Выводим отладочную информацию
                 console.log('[Русификатор Гитхаба] Найдена строка с автором темы:', openedSpan.textContent);
 
-                // Отмечаем как трансформированное
+                // отмечаем как трансформированное
                 footer.setAttribute('data-ru-transformed', 'true');
 
-                // Создаём новую структуру
+                // создаём новую структуру
                 // 1. Сохраняем автора
                 const authorClone = authorLink.cloneNode(true);
 
@@ -317,7 +317,7 @@ const DOMObservers = {
                 const originalTimeText = relativeTime.textContent;
                 console.log('[Русификатор Гитхаба] Оригинальный текст времени:', originalTimeText);
 
-                // Проверяем, содержит ли текст паттерн времени
+                // проверяем, содержит ли текст паттерн времени
                 const hoursAgoMatch = originalTimeText.match(/(\d+)\s+hours?\s+ago/);
                 const minutesAgoMatch = originalTimeText.match(/(\d+)\s+minutes?\s+ago/);
                 const daysAgoMatch = originalTimeText.match(/(\d+)\s+days?\s+ago/);
@@ -328,7 +328,7 @@ const DOMObservers = {
                     const hours = parseInt(hoursAgoMatch[1], 10);
                     let translatedText;
 
-                    // Правильное склонение
+                    // правильное склонение
                     if (hours === 1) {
                         translatedText = "1 час назад";
                     } else if (hours >= 2 && hours <= 4) {
@@ -343,7 +343,7 @@ const DOMObservers = {
                     const minutes = parseInt(minutesAgoMatch[1], 10);
                     let translatedText;
 
-                    // Правильное склонение
+                    // правильное склонение
                     if (minutes === 1) {
                         translatedText = "1 минуту назад";
                     } else if (minutes >= 2 && minutes <= 4) {
@@ -381,7 +381,7 @@ const DOMObservers = {
                     relativeTime.textContent = translatedText;
                     console.log('[Русификатор Гитхаба] Заменено на:', translatedText);
                 } else if (onDateMatch || inDateMatch) {
-                    // Обрабатываем формат «on Apr 12, 2025» или «в Apr 12, 2025»
+                    // обрабатываем формат «on Apr 12, 2025» или «в Apr 12, 2025»
                     const dateText = onDateMatch ? onDateMatch[1] : inDateMatch[1];
                     const monthMapping = {
                         Jan: 'января',
