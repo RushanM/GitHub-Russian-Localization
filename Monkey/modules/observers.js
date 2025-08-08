@@ -20,7 +20,7 @@ const DOMObservers = {
             });
         });
 
-        // Настраиваем наблюдатель
+        // настраиваем наблюдатель
         observer.observe(document.body, {
             childList: true,
             subtree: true,
@@ -28,10 +28,10 @@ const DOMObservers = {
             attributeFilter: ['aria-label', 'placeholder', 'title'],
         });
 
-        // Наблюдаем за появлением модальных окон
+        // наблюдаем за появлением модальных окон
         this.observeModals(translations);
 
-        // Наблюдаем за изменениями заголовка страницы
+        // наблюдаем за изменениями заголовка страницы
         this.observePageTitle(translations);
 
         // трансформируем строки с автором темы при загрузке страницы
@@ -215,9 +215,9 @@ const DOMObservers = {
         }
     },
 
-    // Наблюдение за появлением модальных окон
+    // наблюдение за появлением модальных окон
     observeModals: function (translations) {
-        // Наблюдатель для портала модальных окон
+        // наблюдатель для портала модальных окон
         const portalContainer = document.getElementById('portal');
         if (portalContainer) {
             const modalObserver = new MutationObserver(mutations => {
@@ -242,7 +242,7 @@ const DOMObservers = {
         }
     },
 
-    // Наблюдение за изменениями заголовка страницы
+    // наблюдение за изменениями заголовка страницы
     observePageTitle: function (translations) {
         // сохраняем оригинальную функцию смены заголовка
         const originalTitleSetter = Object.getOwnPropertyDescriptor(Document.prototype, 'title').set;
@@ -258,7 +258,7 @@ const DOMObservers = {
                         translatedTitle = translations[basePart] + ' · GitHub';
                     }
                 }
-                // Вызываем оригинальную функцию
+                // вызываем оригинальную функцию
                 originalTitleSetter.call(this, translatedTitle);
             }
         });
@@ -271,22 +271,22 @@ const DOMObservers = {
             const container = authorEl.closest('.ActivityHeader-module__narrowViewportWrapper--Hjl75, .Box-sc-g0xbh4-0.koxHLL');
             if (!container) return;
 
-            // Находим подвал с текстом «Открыта»
+            // находим подвал с текстом «Открыта»
             const footer = container.querySelector('.ActivityHeader-module__footer--FVHp7, .Box-sc-g0xbh4-0.bJQcYY');
             if (!footer) return;
 
-            // Находим span с «Открыта» и автором
+            // находим span с «Открыта» и автором
             const openedSpan = footer.querySelector('span');
             const authorLink = authorEl.querySelector('a[data-testid="issue-body-header-author"], a[href*="/users/"]') || authorEl;
 
             // проверяем span
             if (!openedSpan) return;
 
-            // Находим ссылку на время с relative-time
+            // находим ссылку на время с relative-time
             const timeLink = footer.querySelector('a[data-testid="issue-body-header-link"]');
             if (!timeLink) return;
 
-            // Находим элемент relative-time внутри ссылки
+            // находим элемент relative-time внутри ссылки
             const relativeTime = timeLink.querySelector('relative-time');
             if (!relativeTime) return;
 
@@ -294,7 +294,7 @@ const DOMObservers = {
             if (footer.getAttribute('data-ru-transformed')) return;
 
             try {
-                // Выводим отладочную информацию
+                // выводим отладочную информацию
                 console.log('[Русификатор Гитхаба] Найдена строка с автором темы:', openedSpan.textContent);
 
                 // отмечаем как трансформированное

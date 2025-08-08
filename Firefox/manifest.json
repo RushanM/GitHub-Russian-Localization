@@ -26,7 +26,7 @@
                 "*://education.github.com/*"
             ],
             "js": [
-                "content.js"
+                "content-fluent-fixed.js"
             ],
             "run_at": "document_end"
         }

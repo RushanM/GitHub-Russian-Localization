@@ -950,11 +950,11 @@ function initTranslation() {
                 const container = authorEl.closest('.ActivityHeader-module__narrowViewportWrapper--Hjl75, .Box-sc-g0xbh4-0.koxHLL');
                 if (!container) return;
 
-                // Находим подвал с текстом «opened»
+                // находим подвал с текстом «opened»
                 const footer = container.querySelector('.ActivityHeader-module__footer--FVHp7, .Box-sc-g0xbh4-0.bJQcYY');
                 if (!footer) return;
 
-                // Находим span с «opened» и автором
+                // находим span с «opened» и автором
                 const openedSpan = footer.querySelector('span');
                 const authorLink = authorEl.querySelector('a[data-testid="issue-body-header-author"], a[href*="/users/"]') || authorEl;
 
@@ -965,7 +965,7 @@ function initTranslation() {
                 const timeLink = footer.querySelector('a[data-testid="issue-body-header-link"]');
                 if (!timeLink) return;
 
-                // Находим элемент relative-time внутри ссылки
+                // находим элемент relative-time внутри ссылки
                 const relativeTime = timeLink.querySelector('relative-time');
                 if (!relativeTime) return;
 
@@ -1155,7 +1155,7 @@ function initTranslation() {
                 }
             });
 
-            // Владельцы и перейти
+            // владельцы и перейти
             document.querySelectorAll('h3.ActionList-sectionDivider-title').forEach(node => {
                 if (node.textContent.trim() === 'Owners') {
                     node.textContent = translations['Owners'];
@@ -1190,7 +1190,7 @@ function initTranslation() {
             });
         });
 
-        // Наблюдение за всем документом, включая изменения атрибутов
+        // наблюдение за всем документом, включая изменения атрибутов
         observer.observe(document, {
             childList: true,
             subtree: true,
@@ -1207,7 +1207,7 @@ function initTranslation() {
         // запуск
         observerStarred.observe(document.body, { childList: true, subtree: true });
 
-        // Начальное прохождение
+        // начальное прохождение
         replaceAllStarred(document.body);
 
         translateTextContent();
