@@ -2,7 +2,7 @@
 const GitHubTranslator = {
     translations: {},
     
-    // Инициализация переводчика
+    // инициализация переводчика
     init: function(translations) {
         this.translations = translations;
         this.translatePage();
@@ -18,7 +18,7 @@ const GitHubTranslator = {
         this.processRepositoryPage();
         this.processProfilePage();
         
-        // Форматирование чисел
+        // форматирование чисел
         TranslationUtils.formatStarCount();
     },
     
@@ -30,7 +30,7 @@ const GitHubTranslator = {
             NodeFilter.SHOW_TEXT,
             { 
                 acceptNode: function(node) {
-                    // Игнорируем пустые узлы и узлы в скриптах/стилях
+                    // игнорируем пустые узлы и узлы в скриптах/стилях
                     if (!node.textContent.trim() || 
                         node.parentElement.tagName === 'SCRIPT' || 
                         node.parentElement.tagName === 'STYLE') {
@@ -153,7 +153,7 @@ const GitHubTranslator = {
     translateRepoTabs: function() {
         const repoNavItems = document.querySelectorAll('.UnderlineNav-item');
         repoNavItems.forEach(item => {
-            // Извлекаем текст вкладки без счетчика
+            // извлекаем текст вкладки без счетчика
             const textSpan = item.querySelector(':scope > span:not(.Counter)');
             if (textSpan && this.translations.repo_tabs && this.translations.repo_tabs[textSpan.textContent.trim()]) {
                 textSpan.textContent = this.translations.repo_tabs[textSpan.textContent.trim()];

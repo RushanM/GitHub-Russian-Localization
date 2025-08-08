@@ -26,6 +26,12 @@
 
 (function () {
     'use strict';
+    
+    // добавляем шрифт Inter для лучшего отображения кириллицы
+    const interFontLink = document.createElement('link');
+    interFontLink.rel = 'stylesheet';
+    interFontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap';
+    document.head.appendChild(interFontLink);
 
     // путь к файлу Fluent
     const ftlPath = "https://raw.githubusercontent.com/RushanM/GitHub-Russian-Translation/refs/heads/modules/%D0%9E%D0%B1%D1%89%D0%B5%D0%B5/ru-ru.ftl";
@@ -34,14 +40,8 @@
     const jsonPath = "https://raw.githubusercontent.com/RushanM/GitHub-Russian-Translation/refs/heads/modules/%D0%9E%D0%B1%D1%89%D0%B5%D0%B5/rus_p.json";
 
     // загружаем переводы с файла Fluent
-    async function loadAndInitializeTranslations() {
-        try {
-            // загружаем библиотеку Fluent перед загрузкой переводов
-            await FluentTranslationModule.loadFluentLibrary();
-            
-            // теперь загружаем переводы
-            const success = await FluentTranslationModule.loadTranslations(ftlPath);
-            
+    FluentTranslationModule.loadTranslations(ftlPath)
+        .then(success => {
             if (!success) {
                 console.warn('Не удалось загрузить файл FTL, пытаюсь загрузить файл JSON…');
                 return loadJsonFallback();
@@ -49,14 +49,11 @@
             
             // запускаем перевод и наблюдение за DOM
             startTranslation();
-        } catch (error) {
+        })
+        .catch(error => {
             console.error('Ошибка при загрузке Fluent переводов:', error);
             loadJsonFallback();
-        }
-    }
-    
-    // запускаем загрузку переводов
-    loadAndInitializeTranslations();
+        });
 
     // загрузка файла JSON (запасной вариант)
     function loadJsonFallback() {

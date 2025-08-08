@@ -1,6 +1,6 @@
 // Модуль наблюдателей за DOM
 const DOMObservers = {
-    // Инициализация MutationObserver для отслеживания изменений DOM
+    // инициализация MutationObserver для отслеживания изменений DOM
     startObserving: function (translations) {
         // основной наблюдатель за DOM
         const observer = new MutationObserver((mutations) => {
@@ -143,7 +143,7 @@ const DOMObservers = {
         // поиск и перевод элементов в шапке
         const headerElements = element.querySelectorAll('.AppHeader-globalBar-item');
         headerElements.forEach(item => {
-            // Ищем элементы меню в шапке
+            // ищем элементы меню в шапке
             const menuText = item.querySelector('.AppHeader-item-label');
             if (menuText && translations[menuText.textContent.trim()]) {
                 menuText.textContent = translations[menuText.textContent.trim()];
@@ -267,7 +267,7 @@ const DOMObservers = {
     // трансформация строки с автором темы из формата «Автор Открыта 8 hours ago» в «Открыта Автор 8 часов назад»
     transformIssueAuthorStrings: function (translations) {
         document.querySelectorAll('.Box-sc-g0xbh4-0.dqmClk, [data-testid="issue-body-header-author"]').forEach(authorEl => {
-            // Ищем ближайший родительский контейнер с информацией об открытии темы
+            // ищем ближайший родительский контейнер с информацией об открытии темы
             const container = authorEl.closest('.ActivityHeader-module__narrowViewportWrapper--Hjl75, .Box-sc-g0xbh4-0.koxHLL');
             if (!container) return;
 
@@ -398,7 +398,7 @@ const DOMObservers = {
                         Dec: 'декабря'
                     };
 
-                    // Регулярное выражение для поиска и замены месяца в строке даты
+                    // регулярное выражение для поиска и замены месяца в строке даты
                     const monthRegex = /([A-Za-z]{3})\s+(\d{1,2}),\s+(\d{4})/;
                     const dateMatch = dateText.match(monthRegex);
 

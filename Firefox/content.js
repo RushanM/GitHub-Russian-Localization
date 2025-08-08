@@ -39,6 +39,11 @@ function disableTranslation() {
 function initTranslation() {
     'use strict';
 
+    const interFontLink = document.createElement('link');
+    interFontLink.rel = 'stylesheet';
+    interFontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap';
+    document.head.appendChild(interFontLink);
+
     // загружаем переводы из удалённого файла rus_p.json и объединяем все секции
     let translations = {};
     fetch("https://raw.githubusercontent.com/RushanM/GitHub-Russian-Translation/refs/heads/master/%D0%9E%D0%B1%D1%89%D0%B5%D0%B5/rus_p.json")
@@ -946,7 +951,7 @@ function initTranslation() {
             });
             // трансформация строки вида «Пользователь opened 2 hours ago» в «Открыта Пользователь 2 часа назад»
             document.querySelectorAll('.Box-sc-g0xbh4-0.dqmClk, [data-testid="issue-body-header-author"]').forEach(authorEl => {
-                // Ищем ближайший родительский контейнер, который содержит также подвал с «opened»
+                // ищем ближайший родительский контейнер, который содержит также подвал с «opened»
                 const container = authorEl.closest('.ActivityHeader-module__narrowViewportWrapper--Hjl75, .Box-sc-g0xbh4-0.koxHLL');
                 if (!container) return;
 
@@ -1056,7 +1061,7 @@ function initTranslation() {
                             Dec: 'декабря'
                         };
 
-                        // Регулярное выражение для поиска и замены месяца в строке даты
+                        // регулярное выражение для поиска и замены месяца в строке даты
                         const monthRegex = /([A-Za-z]{3})\s+(\d{1,2}),\s+(\d{4})/;
                         const dateMatch = dateText.match(monthRegex);
 
