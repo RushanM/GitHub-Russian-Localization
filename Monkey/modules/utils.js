@@ -1,7 +1,6 @@
 // Утилиты для работы с переводами и форматированием
 const TranslationUtils = {
     // объединение секций перевода в единый словарь
-    // для обратной совместимости с форматом JSON
     mergeTranslations: function(data) {
         return Object.assign(
             {},
@@ -21,31 +20,8 @@ const TranslationUtils = {
         );
     },
     
-    // получение перевода с поддержкой Fluent
-    getTranslation: function(key, args = null) {
-        // если модуль Fluent доступен, используем его
-        if (window.FluentTranslationModule && window.FluentTranslationModule.hasMessage(key)) {
-            return window.FluentTranslationModule.getMessage(key, args);
-        } else if (window.FluentTranslationModule) {
-            // попробуем найти по устаревшему ключу
-            const legacyTranslation = window.FluentTranslationModule.getTranslationByLegacyKey(key);
-            if (legacyTranslation) {
-                return legacyTranslation;
-            }
-        }
-        
-        // запасной вариант: ищем в традиционных переводах
-        return this.translations[key] || key;
-    },
-    
-    // склонения для репозиториев
+
     getRepositoriesTranslation: function(count) {
-        // используем Fluent для склонения, если доступен
-        if (window.FluentTranslationModule) {
-            return window.FluentTranslationModule.formatRepositories(count);
-        }
-        
-        // запасной вариант: традиционное склонение
         if (count === 1) return `${count} репозиторий`;
         if (count >= 2 && count <= 4) return `${count} репозитория`;
         return `${count} репозиториев`;

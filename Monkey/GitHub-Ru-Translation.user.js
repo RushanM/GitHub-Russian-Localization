@@ -18,7 +18,6 @@
 // @supportURL      https://github.com/RushanM/GitHub-Russian-Translation/issues
 // @updateURL       https://github.com/RushanM/GitHub-Russian-Translation/raw/main/GitHub%20Ru%20Translation.user.js
 // @version         1-B28
-// @require         https://raw.githubusercontent.com/RushanM/GitHub-Russian-Translation/refs/heads/modules/Monkey/modules/fluent-translator.js
 // @require         https://raw.githubusercontent.com/RushanM/GitHub-Russian-Translation/refs/heads/modules/Monkey/modules/utils.js
 // @require         https://raw.githubusercontent.com/RushanM/GitHub-Russian-Translation/refs/heads/modules/Monkey/modules/translators.js
 // @require         https://raw.githubusercontent.com/RushanM/GitHub-Russian-Translation/refs/heads/modules/Monkey/modules/observers.js
@@ -26,145 +25,65 @@
 
 (function () {
     'use strict';
-    
+
     // добавляем шрифт Inter для лучшего отображения кириллицы
     const interFontLink = document.createElement('link');
     interFontLink.rel = 'stylesheet';
     interFontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap';
     document.head.appendChild(interFontLink);
 
-    // путь к файлу Fluent
-    const ftlPath = "https://raw.githubusercontent.com/RushanM/GitHub-Russian-Translation/refs/heads/modules/%D0%9E%D0%B1%D1%89%D0%B5%D0%B5/ru-ru.ftl";
-    
-    // для обратной совместимости также загружаем JSON версию
-    const jsonPath = "https://raw.githubusercontent.com/RushanM/GitHub-Russian-Translation/refs/heads/modules/%D0%9E%D0%B1%D1%89%D0%B5%D0%B5/rus_p.json";
+    // загружаем переводы и инициализируем переводчик
+    let translations = {};
+    fetch("https://raw.githubusercontent.com/RushanM/GitHub-Russian-Translation/refs/heads/modules/%D0%9E%D0%B1%D1%89%D0%B5%D0%B5/rus_p.json")
+        .then(response => response.json())
+        .then(data => {
+            // сохраняем переводы во внешних переменных
+            window.dashboardCopilotTranslation = data.dashboard["Chat with Copilot"];
+            window.dashboardHomeTranslation = data.dashboard["Home"];
 
-    // загружаем переводы с файла Fluent
-    FluentTranslationModule.loadTranslations(ftlPath)
-        .then(success => {
-            if (!success) {
-                console.warn('Не удалось загрузить файл FTL, пытаюсь загрузить файл JSON…');
-                return loadJsonFallback();
-            }
-            
+            // объединяем секции словаря в один объект
+            translations = TranslationUtils.mergeTranslations(data);
+
             // запускаем перевод и наблюдение за DOM
-            startTranslation();
-        })
-        .catch(error => {
-            console.error('Ошибка при загрузке Fluent переводов:', error);
-            loadJsonFallback();
-        });
+            GitHubTranslator.init(translations);
+            DOMObservers.startObserving(translations);
 
-    // загрузка файла JSON (запасной вариант)
-    function loadJsonFallback() {
-        return fetch(jsonPath)
-            .then(response => response.json())
-            .then(data => {
-                // сохраняем переводы во внешних переменных
-                window.dashboardCopilotTranslation = data.dashboard["Chat with Copilot"];
-                window.dashboardHomeTranslation = data.dashboard["Home"];
-                
-                // объединяем секции словаря в один объект
-                const translations = TranslationUtils.mergeTranslations(data);
+            // блок для перевода Dashboard
+            function translateDashboardBreadcrumbs() {
+                // переводим основную крошку
+                document.querySelectorAll('.AppHeader-context-item-label').forEach(el => {
+                    if (el.textContent.trim() === 'Dashboard' && translations['Dashboard']) {
+                        el.textContent = translations['Dashboard'];
+                    }
+                });
 
-                // запускаем перевод и наблюдение за DOM
-                startTranslationWithJson(translations);
-            })
-            .catch(error => {
-                console.error('Не удалось загрузить переводы:', error);
-            });
-    }
+                // переводим выпадающее меню
+                document.querySelectorAll('.ActionListItem-label').forEach(el => {
+                    if (el.textContent.trim() === 'Dashboard' && translations['Dashboard']) {
+                        el.textContent = translations['Dashboard'];
+                    }
+                });
 
-    // запуск перевода с помощью Fluent
-    function startTranslation() {
-        // устанавливаем переводы для транслятора
-        GitHubTranslator.init({});
-        
-        // запускаем наблюдатели с пустым объектом переводов,
-        // т. к. теперь они будут получать переводы через FluentTranslationModule
-        DOMObservers.startObserving({});
+                // переводим tool-tip
+                document.querySelectorAll('tool-tip[role="tooltip"], tool-tip.sr-only').forEach(el => {
+                    if (el.textContent.trim() === 'Dashboard' && translations['Dashboard']) {
+                        el.textContent = translations['Dashboard'];
+                    }
+                });
+            }
 
-        // блок для перевода Dashboard
-        function translateDashboardBreadcrumbs() {
-            // переводим основную крошку
-            document.querySelectorAll('.AppHeader-context-item-label').forEach(el => {
-                if (el.textContent.trim() === 'Dashboard') {
-                    el.textContent = FluentTranslationModule.getMessage('dashboard-title');
-                }
-            });
-            
-            // переводим выпадающее меню
-            document.querySelectorAll('.ActionListItem-label').forEach(el => {
-                if (el.textContent.trim() === 'Dashboard') {
-                    el.textContent = FluentTranslationModule.getMessage('dashboard-title');
-                }
-            });
-            
-            // переводим tool-tip
-            document.querySelectorAll('tool-tip[role="tooltip"], tool-tip.sr-only').forEach(el => {
-                if (el.textContent.trim() === 'Dashboard') {
-                    el.textContent = FluentTranslationModule.getMessage('dashboard-title');
-                }
-            });
-        }
-
-        // вызываем перевод сразу и при мутациях
-        translateDashboardBreadcrumbs();
-        const dashboardObserver = new MutationObserver(translateDashboardBreadcrumbs);
-        dashboardObserver.observe(document.body, { childList: true, subtree: true });
-        
-        // вызываем трансформацию строк с автором темы при загрузке страницы
-        DOMObservers.transformIssueAuthorStrings({});
-        
-        // устанавливаем интервал для периодической проверки новых строк с автором
-        setInterval(() => {
-            DOMObservers.transformIssueAuthorStrings({});
+            // вызываем перевод сразу и при мутациях
             translateDashboardBreadcrumbs();
-        }, 2000);
-    }
+            const dashboardObserver = new MutationObserver(translateDashboardBreadcrumbs);
+            dashboardObserver.observe(document.body, { childList: true, subtree: true });
 
-    // запуск перевода с помощью JSON (для обратной совместимости)
-    function startTranslationWithJson(translations) {
-        // запускаем перевод и наблюдение за DOM
-        GitHubTranslator.init(translations);
-        DOMObservers.startObserving(translations);
-
-        // блок для перевода Dashboard
-        function translateDashboardBreadcrumbs() {
-            // переводим основную крошку
-            document.querySelectorAll('.AppHeader-context-item-label').forEach(el => {
-                if (el.textContent.trim() === 'Dashboard' && translations['Dashboard']) {
-                    el.textContent = translations['Dashboard'];
-                }
-            });
-            
-            // переводим выпадающее меню
-            document.querySelectorAll('.ActionListItem-label').forEach(el => {
-                if (el.textContent.trim() === 'Dashboard' && translations['Dashboard']) {
-                    el.textContent = translations['Dashboard'];
-                }
-            });
-            
-            // переводим tool-tip
-            document.querySelectorAll('tool-tip[role="tooltip"], tool-tip.sr-only').forEach(el => {
-                if (el.textContent.trim() === 'Dashboard' && translations['Dashboard']) {
-                    el.textContent = translations['Dashboard'];
-                }
-            });
-        }
-
-        // вызываем перевод сразу и при мутациях
-        translateDashboardBreadcrumbs();
-        const dashboardObserver = new MutationObserver(translateDashboardBreadcrumbs);
-        dashboardObserver.observe(document.body, { childList: true, subtree: true });
-        
-        // вызываем трансформацию строк с автором темы при загрузке страницы
-        DOMObservers.transformIssueAuthorStrings(translations);
-        
-        // устанавливаем интервал для периодической проверки новых строк с автором
-        setInterval(() => {
+            // вызываем трансформацию строк с автором темы при загрузке страницы
             DOMObservers.transformIssueAuthorStrings(translations);
-            translateDashboardBreadcrumbs();
-        }, 2000);
-    }
+
+            // устанавливаем интервал для периодической проверки новых строк с автором
+            setInterval(() => {
+                DOMObservers.transformIssueAuthorStrings(translations);
+                translateDashboardBreadcrumbs();
+            }, 2000);
+        });
 })();
