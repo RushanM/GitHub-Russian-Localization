@@ -7,6 +7,7 @@ feed = Лента событий
 
 ## Поиск
 search-type-to-search = Нажмите /, чтобы приступить к поиску
+search-for-repositories = Искать репозитории
 
 ## Команды и инструменты
 command-palette = Палитра команд
@@ -16,6 +17,8 @@ create-new = Создание
 task = Создать задачу
 create-issue = Создать тему
 spark = Блеснуть
+send-now = Отправить прямо сейчас
+open-in-copilot-chat = Закрепить в разговоре с Копайлотом
 
 ## Уведомления и панели
 your-issues = Ваши темы
@@ -52,3 +55,18 @@ pull-requests = Запросы на слияние
 view-all = Посмотреть все
 pull-request-options = Параметры запроса на слияние
 opened-by = Подан
+show-more = Показать больше
+view-changelog = Смотреть список изменений →
+created-on = Создан
+issues = Темы
+issue-options = Параметры темы
+issue-opened-by = Открыта
+issue-updated = Отредактирована
+
+## Подвал
+copyright-2025 = © 2025 компания GitHub
+terms = Условия использования
+privacy = Политика конфиденциальности
+security = О безопасности
+status = Состояние
+community = Сообщество
