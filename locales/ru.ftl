@@ -55,6 +55,7 @@ pull-requests = Запросы на слияние
 view-all = Посмотреть все
 pull-request-options = Параметры запроса на слияние
 opened-by = Подан
+pr-updated = Отредактирован
 show-more = Показать больше
 view-changelog = Смотреть список изменений →
 created-on = Создан
