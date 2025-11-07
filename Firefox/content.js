@@ -1,8 +1,8 @@
-// Проверка включения/выключения перевода
+// проверка включения/выключения перевода
 let translationEnabled = true;
 let observer = null;
 
-// Проверяем сохранённое состояние при загрузке
+// проверяем сохранённое состояние при загрузке
 browser.storage.local.get('enabled').then(result => {
     translationEnabled = result.enabled !== undefined ? result.enabled : true;
     if (translationEnabled) {
@@ -10,7 +10,7 @@ browser.storage.local.get('enabled').then(result => {
     }
 });
 
-// Слушаем сообщения от popup.js
+// слушаем сообщения от popup.js
 browser.runtime.onMessage.addListener(function (message) {
     if (message.action === "toggleTranslation") {
         translationEnabled = message.enabled;
@@ -24,10 +24,10 @@ browser.runtime.onMessage.addListener(function (message) {
     return Promise.resolve({ response: "Состояние изменено" });
 });
 
-// Функция отключения перевода
+// функция отключения перевода
 function disableTranslation() {
     if (observer) {
-        // Останавливаем наблюдатель
+        // останавливаем наблюдатель
         observer.disconnect();
         observer = null;
     }
@@ -35,7 +35,7 @@ function disableTranslation() {
     window.location.reload();
 }
 
-// Функция инициализации всего перевода
+// функция инициализации всего перевода
 function initTranslation() {
     'use strict';
 
@@ -44,14 +44,14 @@ function initTranslation() {
     interFontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap';
     document.head.appendChild(interFontLink);
 
-    // Загружаем переводы из удалённого файла rus_p.json и объединяем все секции
+    // загружаем переводы из удалённого файла ru_old.json и объединяем все секции
     let translations = {};
-    fetch("https://raw.githubusercontent.com/RushanM/GitHub-Russian-Translation/refs/heads/master/%D0%9E%D0%B1%D1%89%D0%B5%D0%B5/rus_p.json")
+    fetch("https://raw.githubusercontent.com/RushanM/GitHub-Russian-Localization/refs/heads/master/locales/ru_old.json")
         .then(response => response.json())
         .then(data => {
-            // Сохраняем перевод из dashboard для Chat with Copilot
+            // сохраняем перевод из dashboard для Chat with Copilot
             window.dashboardCopilotTranslation = data.dashboard["Chat with Copilot"];
-            // Сохраняем перевод из dashboard для Home
+            // сохраняем перевод из dashboard для Home
             window.dashboardHomeTranslation = data.dashboard["Home"];
             translations = Object.assign(
                 {},
@@ -87,10 +87,10 @@ function initTranslation() {
             });
         }
 
-        // Функция для перевода абсолютного времени во всплывающей подсказке, например:
+        // функция для перевода абсолютного времени во всплывающей подсказке, например:
         // «Feb 24, 2025, 3:09 PM GMT+3» → «24 февраля 2025, 15:09 по московскому времени»
         function translateAbsoluteTime(text) {
-            // Маппирование месяцев берём из файла с переводами
+            // маппирование месяцев берём из файла с переводами
             const monthMapping = translations.months || {
                 Jan: 'января',
                 Feb: 'февраля',
@@ -106,8 +106,8 @@ function initTranslation() {
                 Dec: 'декабря'
             };
 
-            // Регулярное выражение для извлечения компонентов времени
-            // Пример: Feb 24, 2025, 3:09 PM GMT+3
+            // регулярное выражение для извлечения компонентов времени
+            // пример: Feb 24, 2025, 3:09 PM GMT+3
             const regex = /^([A-Z][a-z]{2}) (\d{1,2}), (\d{4}), (\d{1,2}):(\d{2})\s*(AM|PM)\s*GMT\+3$/;
             const match = text.match(regex);
             if (match) {
@@ -118,28 +118,28 @@ function initTranslation() {
                 const minute = match[5];
                 const period = match[6];
 
-                // Преобразование в 24-часовой формат
+                // преобразование в 24-часовой формат
                 if (period === 'PM' && hour !== 12) {
                     hour += 12;
                 } else if (period === 'AM' && hour === 12) {
                     hour = 0;
                 }
-                // Форматирование часов с ведущим нулём
+                // форматирование часов с ведущим нулём
                 const hourStr = hour < 10 ? '0' + hour : hour.toString();
                 const monthRu = monthMapping[monthEn] || monthEn;
 
-                // Используем перевод из файла переводов
+                // используем перевод из файла переводов
                 const byMoscowTime = translations.time?.by_moscow_time || "по московскому времени";
                 return `${day} ${monthRu} ${year}, ${hourStr}:${minute} ${byMoscowTime}`;
             }
             return text;
         }
 
-        // Функция для перевода элементов <relative-time>
+        // функция для перевода элементов <relative-time>
         function translateRelativeTimes() {
             const timeElements = document.querySelectorAll('relative-time');
             timeElements.forEach(el => {
-                // Если элемент уже переведён в основном DOM, проверяем его теневой DOM
+                // если элемент уже переведён в основном DOM, проверяем его теневой DOM
                 if (el.getAttribute('data-translated')) {
                     // Проверяем наличие теневого корня и пытаемся перевести его содержимое
                     if (el.shadowRoot) {
@@ -896,10 +896,10 @@ function initTranslation() {
                         }
                     }
 
-                    // Запускаем перевод с корневого элемента
+                    // запускаем перевод с корневого элемента
                     translateNode(btnGroup);
 
-                    // Отмечаем элемент как обработанный
+                    // отмечаем элемент как обработанный
                     btnGroup.setAttribute('data-translated-fork', 'true');
                 }
             });
@@ -913,25 +913,25 @@ function initTranslation() {
             });
         }
 
-        // Функция для перевода статусов тем, кнопок редактирования и создания тем
+        // функция для перевода статусов тем, кнопок редактирования и создания тем
         function translateIssueElements() {
-            // Перевод статуса «Open» в темах
+            // перевод статуса «Open» в темах
             document.querySelectorAll('span[data-testid="header-state"]').forEach(el => {
                 if (el.textContent.trim() === 'Open' && translations['Open']) {
-                    // Сохраняем SVG-значок
+                    // сохраняем значок в формате SVG
                     const svg = el.querySelector('svg');
                     const svgHTML = svg ? svg.outerHTML : '';
 
-                    // Заменяем текст, сохраняя значок
+                    // хаменяем текст, сохраняя значок
                     el.innerHTML = svgHTML + translations['Open'];
                 }
-                // Перевод статуса «Closed» в темах
+                // перевод статуса «Closed» в темах
                 else if (el.textContent.trim() === 'Closed' && translations['Closed']) {
-                    // Сохраняем SVG-значок
+                    // сохраняем значок в формате SVG
                     const svg = el.querySelector('svg');
                     const svgHTML = svg ? svg.outerHTML : '';
 
-                    // Заменяем текст, сохраняя значок
+                    // заменяем текст, сохраняя значок
                     el.innerHTML = svgHTML + translations['Closed'];
                 }
             });

@@ -29,7 +29,7 @@
         "Explain RESTful basics": "Объясни основы RESTful",
         "Explain stack and heap memory": "Объясни различия между стековой и кучевой памятью",
         "Explore Java Map Iterations": "Исследуй способы итерации по Map в Java",
-        "Find Bash script location": "Найди расположение Bash-скрипта",
+        "Find Bash script location": "Найди расположение Bash-сценария",
         "Find issues assigned to me": "Найди назначенные на меня issues",
         "Generate an HTML/JS calculator": "Напиши калькулятор на HTML/JS",
         "Generate cURL JSON POST": "Сгенерируй cURL-запрос для POST с JSON",
@@ -94,6 +94,16 @@
         "Filter repositories": "Отфильтровать репозитории",
         "Show more": "Показать больше",
         "© 2025 GitHub, Inc.": "© компания GitHub, 2025 год"
+    },
+    "footer": {
+        "About": "О нас",
+        "Blog": "Блог",
+        "Terms": "Условия",
+        "Privacy": "Конфиденциальность",
+        "Security": "Безопасность",
+        "Status": "Статус",
+        "Do not share my personal information": "Не передавать мои личные данные",
+        "Manage Cookies": "Управление куки"
     },
     "search": {
         "Owners": "Владельцы",
