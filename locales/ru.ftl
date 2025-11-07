@@ -1,6 +1,6 @@
 # Строки локализации
 
-## Панель управления
+## Шапка страницы
 dashboard = Панель управления
 search-type-to-search = Нажмите {{kbd}}, чтобы искать
 command-palette = Палитра команд
@@ -10,6 +10,8 @@ create-new = Создание
 your-issues = Ваши темы
 your-pull-requests = Ваши запросы на слияние
 no-unread-notifications = У вас нет непрочитанных уведомлений
+
+## Левая колонка страницы 1
 home = Главная страница
 feed = Лента событий
 
@@ -19,22 +21,41 @@ greeting-morning = Доброе утро
 greeting-afternoon = Добрый день
 greeting-evening = Добрый вечер
 
+## Предварительная версия дизайна
 preview = Предварительная версия
 feedback = Обратная связь
+
+## Блок «Образования с Гитхабом» 1
 github-education-tagline = Учитесь. Кооперируйтесь. Развивайтесь
+
+## Окно Копайлота 1
 ask-anything = Спросите что угодно
+
+## Левая колонка страницы 2
 top-repositories = Релевантные репозитории
 search-for-repositories = Искать репозитории
+
+## Блок «Образования с Гитхабом» 2
 github-education-description = «GitHub Education» предоставляет инструменты и поддержку сообщества, чтобы вы могли принимать технологические вызовы и превращать их в возможности. Ваше технологическое будущее начинается здесь!
-add-repositories-files-spaces = Добавить репозитории, файлы или пространства
+
+## Окно Копайлота 2
+add-repositories-files-spaces = Добавить репозиторий, файл или пространство
 send-now = Отправить прямо сейчас
+
+## Блок «Образования с Гитхабом» 3
 go-to-github-education = Перейти в «GitHub Education»
+
+## Окно Копайлота 3
 task = Создать задачу
 new = Новинка
 create-issue = Создать тему
 spark = Блеснуть
+
+## Агентские сессии 1
 agent-sessions = Агентские сессии
 agent-sessions-options = Параметры агентских сессий
+
+## Список изменений Гитхаба 1
 latest-from-changelog = Последнее с нашего списка изменений
 
 ## Форматы дат
@@ -66,16 +87,27 @@ month-long-december = декабря
 
 timezone-msk = по МСК
 
+## Агентские сессии 2
 no-sessions-found = Сессий не найдено. Попробуйте другой фильтр или [link]начните новую сессию[/link].
+
+## Блок запросов на слияние 1
 open-in-copilot-chat = Закрепить в разговоре с Копайлотом
 pull-requests = Запросы на слияние
 view-all = Посмотреть все
 pull-request-options = Параметры запроса на слияние
 opened-by = Подан
 pr-updated = Отредактирован
+
+## Левая колонка страницы 3
 show-more = Показать больше
+
+## Блок запросов на слияние 2
 created-on = Создан
+
+## Список изменений Гитхаба 2
 view-changelog = Смотреть список изменений →
+
+## Блок тем 1
 issues = Темы
 issue-options = Параметры темы
 assign-to-copilot = Делегировать Копайлоту
@@ -154,3 +186,20 @@ profile = Профиль
 stars = Звёзды
 gists = Джисты
 organizations = Организации
+enterprises = Предприятия
+sponsors = Спонсоры
+settings = Настройки
+copilot-settings = Настройки Копайлота
+feature-preview = Тестируемые возможности
+appearance = Внешний вид
+accessibility = Доступность
+try-enterprise = Попробовать Enterprise
+free = Бесплатно
+sign-out = Выйти из учётной записи
+
+## Всплывающее меню добавления окна Копайлота
+copilot-repositories = Репозиторий…
+files-and-folders = Файл или папка
+spaces = Пространство…
+upload-from-computer = Загрузить с компьютера
+extensions = Расширения…
