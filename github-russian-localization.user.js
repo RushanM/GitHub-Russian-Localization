@@ -18,7 +18,7 @@
 // @namespace       githubrussianlocalization
 // @supportURL      https://github.com/RushanM/GitHub-Russian-Localization/issues
 // @updateURL       https://github.com/RushanM/GitHub-Russian-Localization/raw/master/github-russian-localization.user.js
-// @version         P28
+// @version         P29
 // ==/UserScript==
 
 (function() {
@@ -205,6 +205,12 @@
 
             const normalized = (identifier ?? '').trim();
             if (!normalized) {
+                const firstEntry = kbdMap.entries().next();
+                if (!firstEntry.done) {
+                    const [firstKey, element] = firstEntry.value;
+                    kbdMap.delete(firstKey);
+                    return element;
+                }
                 return null;
             }
 
@@ -220,6 +226,13 @@
                     kbdMap.delete(key);
                     return element;
                 }
+            }
+
+            const fallback = kbdMap.entries().next();
+            if (!fallback.done) {
+                const [fallbackKey, element] = fallback.value;
+                kbdMap.delete(fallbackKey);
+                return element;
             }
 
             return null;
@@ -246,12 +259,16 @@
                     fragment.appendChild(document.createTextNode(textPart));
                 }
 
-                const identifier = match[1] ?? '';
-                const kbdElement = this.resolveKbdElement(identifier, map);
+                const placeholderContent = match[1] ?? '';
+                const kbdElement = this.resolveKbdElement(placeholderContent, map);
                 if (kbdElement) {
+                    const displayText = placeholderContent.trim();
+                    if (displayText) {
+                        kbdElement.textContent = displayText;
+                    }
                     fragment.appendChild(kbdElement);
-                } else if (identifier) {
-                    fragment.appendChild(document.createTextNode(identifier));
+                } else if (placeholderContent) {
+                    fragment.appendChild(document.createTextNode(placeholderContent));
                 }
 
                 lastIndex = regex.lastIndex;
@@ -379,18 +396,34 @@
          * метод для локализации элементов ActionListItem-label
          */
         localizeActionListItems() {
-            const translations = [
-                { text: 'Home', key: 'home' },
-                { text: 'Feed', key: 'feed' }
-            ];
+            const translationMap = new Map([
+                ['Home', 'home'],
+                ['Feed', 'feed'],
+                ['New issue', 'new-issue'],
+                ['New repository', 'new-repository'],
+                ['Import repository', 'import-repository'],
+                ['New agent task', 'new-agent-task'],
+                ['New codespace', 'new-codespace'],
+                ['New gist', 'new-gist'],
+                ['New organization', 'new-organization'],
+                ['New project', 'new-project'],
+                ['Profile', 'profile'],
+                ['Repositories', 'repositories'],
+                ['Stars', 'stars'],
+                ['Gists', 'gists'],
+                ['Organizations', 'organizations']
+            ]);
 
-            const items = document.querySelectorAll('.ActionListItem-label');
+            const selectors = ['.ActionListItem-label', '.prc-ActionList-ItemLabel-TmBhn'];
+            const items = document.querySelectorAll(selectors.join(', '));
             items.forEach(item => {
                 const text = item.textContent.trim();
-                const translation = translations.find(t => t.text === text);
-                if (translation) {
-                    this.localizeByText(item, translation.text, translation.key);
+                if (!translationMap.has(text)) {
+                    return;
                 }
+
+                const key = translationMap.get(text);
+                this.localizeByText(item, text, key);
             });
         }
 
@@ -421,10 +454,11 @@
         localizeDynamicTooltips() {
             const dynamicTranslations = [
                 { text: 'Your issues', key: 'your-issues' },
-                { text: 'Your pull requests', key: 'your-pull-requests' }
+                { text: 'Your pull requests', key: 'your-pull-requests' },
+                { text: 'Account switcher', key: 'account-switcher' }
             ];
 
-            const allTooltips = document.querySelectorAll('tool-tip');
+            const allTooltips = document.querySelectorAll('tool-tip, .prc-TooltipV2-Tooltip-cYMVY');
             allTooltips.forEach(tooltip => {
                 const text = tooltip.textContent.trim();
                 const translation = dynamicTranslations.find(t => t.text === text);
@@ -847,79 +881,103 @@
                 this.localizeByText(label, 'Tip:', 'tip');
             });
 
-            // «Type @ to search people and organizations»
-            const paletteHintDivs = document.querySelectorAll('command-palette-help div');
-            paletteHintDivs.forEach(div => {
-                const text = div.textContent;
-                if (text && text.includes('Type') && text.includes('@') && text.includes('to search people and organizations')) {
-                    const kbdAt = div.querySelector('kbd.hx_kbd');
-                    if (kbdAt && kbdAt.textContent.trim() === '@') {
-                        const applied = this.replaceContentWithKbdTranslation(
-                            div,
-                            'type-at-to-search-people',
-                            new Map([[kbdAt.textContent.trim(), kbdAt]])
+            const hintConfigs = [
+                {
+                    tokens: ['Type', '@', 'to search people and organizations'],
+                    translationKey: 'type-at-to-search-people',
+                    identifier: '@',
+                    logMessage: 'Type @ to search people...'
+                },
+                {
+                    tokens: ['Type', '?', 'for help and tips'],
+                    translationKey: 'type-question-for-help',
+                    identifier: '?',
+                    logMessage: 'Type ? for help...'
+                },
+                {
+                    tokens: ['Type', '#', 'to search issues'],
+                    translationKey: 'type-hash-to-search-issues',
+                    identifier: '#',
+                    logMessage: 'Type # to search issues'
+                },
+                {
+                    tokens: ['Type', '>', 'to activate command mode'],
+                    translationKey: 'type-gt-to-activate-command',
+                    identifier: '>',
+                    logMessage: 'Type > to activate command mode'
+                },
+                {
+                    tokens: ['Type', '#', 'to search pull requests'],
+                    translationKey: 'type-hash-to-search-prs',
+                    identifier: '#',
+                    logMessage: 'Type # to search pull requests'
+                }
+            ];
+
+            const localizeHintElement = (element, options = {}) => {
+                if (!element || element.getAttribute('data-ru-localized') === 'true') {
+                    return null;
+                }
+
+                const text = element.textContent;
+                if (!text) {
+                    return null;
+                }
+
+                for (const config of hintConfigs) {
+                    if (!config.tokens.every(token => text.includes(token))) {
+                        continue;
+                    }
+
+                    const kbdElement = element.querySelector('kbd.hx_kbd');
+                    if (!kbdElement || kbdElement.textContent.trim() !== config.identifier) {
+                        continue;
+                    }
+
+                    if (options.leadingNodes && options.leadingNodes.length > 0) {
+                        const translation = this.getTranslation(config.translationKey);
+                        if (!translation) {
+                            continue;
+                        }
+
+                        const fragment = this.createFragmentFromKbdTranslation(
+                            translation,
+                            new Map([[config.identifier, kbdElement]])
                         );
-                        if (applied) {
-                            console.log(`${LOG_PREFIX} Переведено: «Type @ to search people...»`);
+                        if (!fragment) {
+                            continue;
+                        }
+
+                        const nodes = [...options.leadingNodes];
+                        if (options.insertSpaceAfterLeading !== false) {
+                            nodes.push(document.createTextNode(options.spaceText ?? ' '));
+                        }
+                        nodes.push(fragment);
+
+                        element.replaceChildren(...nodes);
+                        element.setAttribute('data-ru-localized', 'true');
+                    } else {
+                        const replaced = this.replaceContentWithKbdTranslation(
+                            element,
+                            config.translationKey,
+                            new Map([[config.identifier, kbdElement]])
+                        );
+                        if (!replaced) {
+                            continue;
                         }
                     }
-                }
-            });
 
-            // «Type ? for help and tips»
+                    return config.logMessage;
+                }
+
+                return null;
+            };
+
             const helpHintDivs = document.querySelectorAll('command-palette-help div');
             helpHintDivs.forEach(div => {
-                const text = div.textContent;
-                if (text && text.includes('Type') && text.includes('?') && text.includes('for help and tips')) {
-                    const kbdQuestion = div.querySelector('kbd.hx_kbd');
-                    if (kbdQuestion && kbdQuestion.textContent.trim() === '?') {
-                        const applied = this.replaceContentWithKbdTranslation(
-                            div,
-                            'type-question-for-help',
-                            new Map([[kbdQuestion.textContent.trim(), kbdQuestion]])
-                        );
-                        if (applied) {
-                            console.log(`${LOG_PREFIX} Переведено: «Type ? for help...»`);
-                        }
-                    }
-                }
-            });
-
-            // «Type # to search issues»
-            const hashHintDivs = document.querySelectorAll('command-palette-help div');
-            hashHintDivs.forEach(div => {
-                const text = div.textContent;
-                if (text && text.includes('Type') && text.includes('#') && text.includes('to search issues')) {
-                    const kbdHash = div.querySelector('kbd.hx_kbd');
-                    if (kbdHash && kbdHash.textContent.trim() === '#') {
-                        const applied = this.replaceContentWithKbdTranslation(
-                            div,
-                            'type-hash-to-search-issues',
-                            new Map([[kbdHash.textContent.trim(), kbdHash]])
-                        );
-                        if (applied) {
-                            console.log(`${LOG_PREFIX} Переведено: «Type # to search issues»`);
-                        }
-                    }
-                }
-            });
-
-            // «Type > to activate command mode»
-            const gtHintDivs = document.querySelectorAll('command-palette-help div');
-            gtHintDivs.forEach(div => {
-                const text = div.textContent;
-                if (text && text.includes('Type') && text.includes('to activate command mode')) {
-                    const kbdGt = div.querySelector('kbd.hx_kbd');
-                    if (kbdGt && kbdGt.textContent.trim() === '>') {
-                        const applied = this.replaceContentWithKbdTranslation(
-                            div,
-                            'type-gt-to-activate-command',
-                            new Map([[kbdGt.textContent.trim(), kbdGt]])
-                        );
-                        if (applied) {
-                            console.log(`${LOG_PREFIX} Переведено: «Type > to activate command mode»`);
-                        }
-                    }
+                const message = localizeHintElement(div);
+                if (message) {
+                    console.log(`${LOG_PREFIX} Переведено: «${message}»`);
                 }
             });
 
@@ -933,18 +991,10 @@
                 const leftDiv = flexContainer.children[0]; // левая часть
                 const rightDiv = flexContainer.children[1]; // правая часть «Type ? for help»
 
-                // локализация правой части «Type ? for help and tips»
-                if (rightDiv && rightDiv.textContent.includes('Type') && rightDiv.textContent.includes('?') && rightDiv.textContent.includes('for help')) {
-                    const kbdQuestion = rightDiv.querySelector('kbd.hx_kbd');
-                    if (kbdQuestion && kbdQuestion.textContent.trim() === '?') {
-                        const applied = this.replaceContentWithKbdTranslation(
-                            rightDiv,
-                            'type-question-for-help',
-                            new Map([[kbdQuestion.textContent.trim(), kbdQuestion]])
-                        );
-                        if (applied) {
-                            console.log(`${LOG_PREFIX} Переведена правая часть: «Type ? for help...»`);
-                        }
+                if (rightDiv) {
+                    const message = localizeHintElement(rightDiv);
+                    if (message) {
+                        console.log(`${LOG_PREFIX} Переведена правая часть: «${message}»`);
                     }
                 }
 
@@ -963,70 +1013,11 @@
                         console.log(`${LOG_PREFIX} Переведено: «Go to your accessibility settings...»`);
                     }
                 }
-                
-                // «Type @ to search people and organizations»
-                else if (text && text.includes('Type') && text.includes('@') && text.includes('to search people and organizations')) {
-                    const kbdAt = leftDiv.querySelector('kbd.hx_kbd');
-                    if (kbdAt && kbdAt.textContent.trim() === '@' && boldSpan) {
-                        const translation = this.getTranslation('type-at-to-search-people');
-                        if (translation) {
-                            leftDiv.innerHTML = '';
-                            leftDiv.appendChild(boldSpan);
-                            leftDiv.appendChild(document.createTextNode(' '));
-                            const fragment = this.createFragmentFromKbdTranslation(
-                                translation,
-                                new Map([[kbdAt.textContent.trim(), kbdAt]])
-                            );
-                            if (fragment) {
-                                leftDiv.appendChild(fragment);
-                                leftDiv.setAttribute('data-ru-localized', 'true');
-                                console.log(`${LOG_PREFIX} Переведено: «Type @ to search people...»`);
-                            }
-                        }
-                    }
-                }
-
-                // «Type # to search issues»
-                else if (text && text.includes('Type') && text.includes('#') && text.includes('to search issues')) {
-                    const kbdHash = leftDiv.querySelector('kbd.hx_kbd');
-                    if (kbdHash && kbdHash.textContent.trim() === '#' && boldSpan) {
-                        const translation = this.getTranslation('type-hash-to-search-issues');
-                        if (translation) {
-                            leftDiv.innerHTML = '';
-                            leftDiv.appendChild(boldSpan);
-                            leftDiv.appendChild(document.createTextNode(' '));
-                            const fragment = this.createFragmentFromKbdTranslation(
-                                translation,
-                                new Map([[kbdHash.textContent.trim(), kbdHash]])
-                            );
-                            if (fragment) {
-                                leftDiv.appendChild(fragment);
-                                leftDiv.setAttribute('data-ru-localized', 'true');
-                                console.log(`${LOG_PREFIX} Переведено: «Type # to search issues»`);
-                            }
-                        }
-                    }
-                }
-
-                // «Type # to search pull requests»
-                else if (text && text.includes('Type') && text.includes('#') && text.includes('to search pull requests')) {
-                    const kbdHash = leftDiv.querySelector('kbd.hx_kbd');
-                    if (kbdHash && kbdHash.textContent.trim() === '#' && boldSpan) {
-                        const translation = this.getTranslation('type-hash-to-search-prs');
-                        if (translation) {
-                            leftDiv.innerHTML = '';
-                            leftDiv.appendChild(boldSpan);
-                            leftDiv.appendChild(document.createTextNode(' '));
-                            const fragment = this.createFragmentFromKbdTranslation(
-                                translation,
-                                new Map([[kbdHash.textContent.trim(), kbdHash]])
-                            );
-                            if (fragment) {
-                                leftDiv.appendChild(fragment);
-                                leftDiv.setAttribute('data-ru-localized', 'true');
-                                console.log(`${LOG_PREFIX} Переведено: «Type # to search pull requests»`);
-                            }
-                        }
+                else {
+                    const options = boldSpan ? { leadingNodes: [boldSpan] } : undefined;
+                    const message = localizeHintElement(leftDiv, options);
+                    if (message) {
+                        console.log(`${LOG_PREFIX} Переведено: «${message}»`);
                     }
                 }
             });
@@ -1122,6 +1113,62 @@
             taskDescriptions.forEach(desc => {
                 this.localizeByText(desc, 'Describe your task in natural language. Copilot will work in the background and open a pull request for your review.', 'copilot-task-description');
             });
+
+            // ссылка «Learn more about Copilot coding agent»
+            const learnMoreLinks = document.querySelectorAll('.GlobalCopilotOverlay-module__messageState--ORDxQ a.prc-Link-Link-85e08');
+            learnMoreLinks.forEach(link => {
+                this.localizeByText(link, 'Learn more about Copilot coding agent', 'learn-more-copilot-agent');
+            });
+
+            // уведомление «Copilot uses AI. Check for mistakes.» с сохранением ссылки
+            const disclosureParagraphs = document.querySelectorAll('.GlobalCopilotOverlay-module__copilotDisclosureText--hPU0b');
+            const disclosureTranslation = this.getTranslation('copilot-uses-ai');
+
+            if (disclosureTranslation) {
+                const disclosureParts = disclosureTranslation.split(/\[link\]|\[\/link\]/);
+                const normalizedDisclosure = disclosureParts.join('').replace(/\s+/g, ' ').trim();
+                const englishDisclosure = 'Copilot uses AI. Check for mistakes.'.replace(/\s+/g, ' ').trim();
+
+                disclosureParagraphs.forEach(paragraph => {
+                    const link = paragraph.querySelector('a');
+                    if (!link) {
+                        return;
+                    }
+
+                    const currentText = paragraph.textContent.replace(/\s+/g, ' ').trim();
+                    if (currentText === normalizedDisclosure) {
+                        if (paragraph.getAttribute('data-ru-localized') !== 'true') {
+                            paragraph.setAttribute('data-ru-localized', 'true');
+                        }
+                        return;
+                    }
+
+                    if (currentText !== englishDisclosure && paragraph.getAttribute('data-ru-localized') === 'true') {
+                        return;
+                    }
+
+                    if (disclosureParts.length < 3) {
+                        return;
+                    }
+
+                    const prefix = disclosureParts[0] ?? '';
+                    const linkText = disclosureParts[1] ?? '';
+                    const suffix = disclosureParts.slice(2).join('');
+
+                    const fragment = document.createDocumentFragment();
+                    if (prefix) {
+                        fragment.appendChild(document.createTextNode(prefix));
+                    }
+                    link.textContent = linkText;
+                    fragment.appendChild(link);
+                    if (suffix) {
+                        fragment.appendChild(document.createTextNode(suffix));
+                    }
+
+                    paragraph.replaceChildren(fragment);
+                    paragraph.setAttribute('data-ru-localized', 'true');
+                });
+            }
         }
 
         /**
