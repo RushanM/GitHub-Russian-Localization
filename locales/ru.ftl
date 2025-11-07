@@ -117,9 +117,11 @@ give-feedback = Оставить отзыв
 ## Палитра команд
 search-or-jump = Искать или сразу куда-то перейти…
 tip = Подсказка:
+go-to-accessibility-settings = перейдите в настройки доступности, чтобы перенастроить горячие клавиши
 type-at-to-search-people = нажмите @, чтобы искать среди людей и организаций
 type-gt-to-activate-command = нажмите >, чтобы активировать режим команд
 type-hash-to-search-issues = нажмите #, чтобы искать среди тем
+type-hash-to-search-prs = нажмите #, чтобы искать среди запросов на слияние
 type-question-for-help = Нажмите ?, чтобы получить справку и подсказки
 pages = Страницы
 notifications = Уведомления
