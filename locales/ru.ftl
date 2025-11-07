@@ -118,15 +118,15 @@ give-feedback = Оставить отзыв
 search-or-jump = Искать или сразу куда-то перейти…
 tip = Подсказка:
 go-to-accessibility-settings = перейдите в настройки доступности, чтобы перенастроить горячие клавиши
-type-at-to-search-people = нажмите @, чтобы искать среди людей и организаций
-type-gt-to-activate-command = нажмите >, чтобы активировать режим команд
-type-hash-to-search-issues = нажмите #, чтобы искать среди тем
-type-hash-to-search-prs = нажмите #, чтобы искать среди запросов на слияние
-type-question-for-help = Нажмите ?, чтобы получить справку и подсказки
+type-at-to-search-people = нажмите [kbd]@[/kbd], чтобы искать среди людей и организаций
+type-gt-to-activate-command = нажмите [kbd]>[/kbd], чтобы активировать режим команд
+type-hash-to-search-issues = нажмите [kbd]#[/kbd], чтобы искать среди тем
+type-hash-to-search-prs = нажмите [kbd]#[/kbd], чтобы искать среди запросов на слияние
+type-question-for-help = Нажмите [kbd]?[/kbd], чтобы получить справку и подсказки
 pages = Страницы
 notifications = Уведомления
 users = Пользователи
-enter-to-jump-tab-to-search = Клавиша ввода (Enter) — переход, клавиша табуляции (Tab) — поиск
+enter-to-jump-tab-to-search = [kbd]Клавиша ввода (Enter)[/kbd] — переход, [kbd]клавиша табуляции (Tab)[/kbd] — поиск
 
 ## Агентская панель
 agents = Агенты
