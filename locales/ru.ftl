@@ -1,32 +1,17 @@
 # Строки локализации
 
-## Навигация
+## Панель управления
 dashboard = Панель управления
-home = Главная страница
-feed = Лента событий
-projects = Проекты
-discussions = Обсуждения
-codespaces = Кодовые пространства
-copilot = Копайлот
-
-## Поиск
-search-type-to-search = Нажмите {{kbd}} чтобы искать
-search-for-repositories = Искать репозитории
-
-## Команды и инструменты
+search-type-to-search = Нажмите {{kbd}}, чтобы искать
 command-palette = Палитра команд
 copilot-chat = Перейти к общению с Копайлотом
 open-agents-panel = Открыть агентскую панель
 create-new = Создание
-task = Создать задачу
-create-issue = Создать тему
-spark = Блеснуть
-send-now = Отправить прямо сейчас
-
-## Уведомления и панели
 your-issues = Ваши темы
 your-pull-requests = Ваши запросы на слияние
 no-unread-notifications = У вас нет непрочитанных уведомлений
+home = Главная страница
+feed = Лента событий
 
 ## Приветствия по времени суток
 greeting-night = Доброй ночи
@@ -34,70 +19,23 @@ greeting-morning = Доброе утро
 greeting-afternoon = Добрый день
 greeting-evening = Добрый вечер
 
-## GitHub Education
-github-education-tagline = Учитесь. Кооперируйтесь. Развивайтесь
-github-education-description = GitHub Education предоставляет инструменты и поддержку сообщества, чтобы вы могли принимать технологические вызовы и превращать их в возможности. Ваше технологическое будущее начинается здесь!
-go-to-github-education = Перейти в GitHub Education
-
-## Копайлот и часть левой боковой панели
-ask-anything = Спросите что угодно
-top-repositories = Релевантные репозитории
-add-repositories-files-spaces = Добавить репозитории, файлы или пространства
-
-## Метки, статусы и ссылки
 preview = Предварительная версия
 feedback = Обратная связь
+github-education-tagline = Учитесь. Кооперируйтесь. Развивайтесь
+ask-anything = Спросите что угодно
+top-repositories = Релевантные репозитории
+search-for-repositories = Искать репозитории
+github-education-description = «GitHub Education» предоставляет инструменты и поддержку сообщества, чтобы вы могли принимать технологические вызовы и превращать их в возможности. Ваше технологическое будущее начинается здесь!
+add-repositories-files-spaces = Добавить репозитории, файлы или пространства
+send-now = Отправить прямо сейчас
+go-to-github-education = Перейти в «GitHub Education»
+task = Создать задачу
 new = Новинка
-
-## Панель управления и списки
-latest-from-changelog = Последнее с нашего списка изменений
+create-issue = Создать тему
+spark = Блеснуть
 agent-sessions = Агентские сессии
 agent-sessions-options = Параметры агентских сессий
-no-sessions-found = Сессий не найдено. Попробуйте другой фильтр или [link]начните новую сессию[/link].
-pull-requests = Запросы на слияние
-view-all = Посмотреть все
-pull-request-options = Параметры запроса на слияние
-opened-by = Подан
-pr-updated = Отредактирован
-show-more = Показать больше
-view-changelog = Смотреть список изменений →
-created-on = Создан
-issues = Темы
-issue-options = Параметры темы
-issue-opened-by = Открыта
-issue-updated = Отредактирована
-issue-created-on = Создана
-
-## Подвал
-copyright-2025 = © 2025 компания GitHub
-terms = Условия использования
-privacy = Политика конфиденциальности
-security = О безопасности
-status = Состояние
-community = Сообщество
-docs = Документация
-contact = Связаться
-manage-cookies = Настроить использование куки
-do-not-share-info = Не делитесь моей личной информацией
-
-## Действия и подсказки
-open-in-copilot-chat = Закрепить в разговоре с Копайлотом
-assign-to-copilot = Делегировать Копайлоту
-close-menu = Закрыть меню
-explore = Обзор
-marketplace = Магазин
-mcp-registry = Реестр MCP
-owners = Владельцы
-jump-to = Перейти
-repositories = Репозитории
-search-syntax-tips = Статья о синтаксисе поиска
-give-feedback = Оставить отзыв
-chat-with-copilot = Написать Копайлоту
-start-copilot-thread = Начать новую беседу с Копайлотом
-agents = Агенты
-branch = Ветка
-select-custom-agent = Выбрать своего агента
-start-task = Запустить выполнение задачи
+latest-from-changelog = Последнее с нашего списка изменений
 
 ## Форматы дат
 month-short-jan = янв.
@@ -127,3 +65,69 @@ month-long-november = ноября
 month-long-december = декабря
 
 timezone-msk = по МСК
+
+no-sessions-found = Сессий не найдено. Попробуйте другой фильтр или [link]начните новую сессию[/link].
+open-in-copilot-chat = Закрепить в разговоре с Копайлотом
+pull-requests = Запросы на слияние
+view-all = Посмотреть все
+pull-request-options = Параметры запроса на слияние
+opened-by = Подан
+pr-updated = Отредактирован
+show-more = Показать больше
+created-on = Создан
+view-changelog = Смотреть список изменений →
+issues = Темы
+issue-options = Параметры темы
+assign-to-copilot = Делегировать Копайлоту
+issue-opened-by = Открыта
+issue-updated = Отредактирована
+issue-created-on = Создана
+
+## Подвал
+copyright-2025 = © 2025 компания GitHub
+terms = Условия использования
+privacy = Политика конфиденциальности
+security = О безопасности
+status = Состояние
+community = Сообщество
+docs = Документация
+contact = Связаться
+manage-cookies = Настроить использование куки
+do-not-share-info = Не делитесь моей личной информацией
+
+## Левое боковое меню
+close-menu = Закрыть меню
+projects = Проекты
+discussions = Обсуждения
+codespaces = Кодовые пространства
+copilot = Копайлот
+explore = Обзор
+marketplace = Магазин
+mcp-registry = Реестр MCP
+
+## Поиск
+owners = Владельцы
+jump-to = Перейти
+repositories = Репозитории
+chat-with-copilot = Написать Копайлоту
+start-copilot-thread = Начать новую беседу с Копайлотом
+search-syntax-tips = Статья о синтаксисе поиска
+give-feedback = Оставить отзыв
+
+## Палитра команд
+search-or-jump = Искать или сразу куда-то перейти…
+tip = Подсказка:
+type-at-to-search-people = нажмите @, чтобы начать искать среди людей и организаций
+type-question-for-help = нажмите ?, чтобы получить справку и подсказки
+pages = Страницы
+notifications = Уведомления
+users = Пользователи
+enter-to-jump-tab-to-search = Клавиша ввода (Enter) — переход, клавиша табуляции (Tab) — поиск
+
+## Агентская панель
+agents = Агенты
+branch = Ветка
+select-custom-agent = Выбрать своего агента
+start-task = Запустить выполнение задачи
+start-new-task-copilot = Начать новую задачу с Копайлотом
+copilot-task-description = Опишите задачу на разговорном языке. Копайлот начнёт работу в фоновом режиме и подаст запрос на слияние, ожидая вашего рассмотрения.
