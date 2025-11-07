@@ -117,8 +117,10 @@ give-feedback = Оставить отзыв
 ## Палитра команд
 search-or-jump = Искать или сразу куда-то перейти…
 tip = Подсказка:
-type-at-to-search-people = нажмите @, чтобы начать искать среди людей и организаций
-type-question-for-help = нажмите ?, чтобы получить справку и подсказки
+type-at-to-search-people = нажмите @, чтобы искать среди людей и организаций
+type-gt-to-activate-command = нажмите >, чтобы активировать режим команд
+type-hash-to-search-issues = нажмите #, чтобы искать среди тем
+type-question-for-help = Нажмите ?, чтобы получить справку и подсказки
 pages = Страницы
 notifications = Уведомления
 users = Пользователи
