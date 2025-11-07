@@ -66,6 +66,7 @@ issues = Темы
 issue-options = Параметры темы
 issue-opened-by = Открыта
 issue-updated = Отредактирована
+issue-created-on = Создана
 
 ## Подвал
 copyright-2025 = © 2025 компания GitHub
