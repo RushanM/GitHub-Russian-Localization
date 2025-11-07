@@ -10,7 +10,7 @@ codespaces = Кодовые пространства
 copilot = Копайлот
 
 ## Поиск
-search-type-to-search = Нажмите /, чтобы приступить к поиску
+search-type-to-search = Нажмите {{kbd}} чтобы приступить к поиску
 search-for-repositories = Искать репозитории
 
 ## Команды и инструменты
@@ -53,7 +53,7 @@ new = Новинка
 latest-from-changelog = Последнее с нашего списка изменений
 agent-sessions = Агентские сессии
 agent-sessions-options = Параметры агентских сессий
-no-sessions-found = Сессий не найдено. Попробуйте другой фильтр или начните новую сессию.
+no-sessions-found = Сессий не найдено. Попробуйте другой фильтр или [link]начните новую сессию[/link].
 pull-requests = Запросы на слияние
 view-all = Посмотреть все
 pull-request-options = Параметры запроса на слияние
@@ -83,3 +83,32 @@ do-not-share-info = Не делитесь моей личной информац
 ## Действия и подсказки
 open-in-copilot-chat = Закрепить в разговоре с Копайлотом
 assign-to-copilot = Делегировать Копайлоту
+
+## Форматы дат
+month-short-jan = янв.
+month-short-feb = февр.
+month-short-mar = мар.
+month-short-apr = апр.
+month-short-may = мая
+month-short-jun = июн.
+month-short-jul = июл.
+month-short-aug = авг.
+month-short-sep = сент.
+month-short-oct = окт.
+month-short-nov = нояб.
+month-short-dec = дек.
+
+month-long-january = января
+month-long-february = февраля
+month-long-march = марта
+month-long-april = апреля
+month-long-may = мая
+month-long-june = июня
+month-long-july = июля
+month-long-august = августа
+month-long-september = сентября
+month-long-october = октября
+month-long-november = ноября
+month-long-december = декабря
+
+timezone-msk = по МСК
