@@ -10,7 +10,7 @@ codespaces = Кодовые пространства
 copilot = Копайлот
 
 ## Поиск
-search-type-to-search = Нажмите {{kbd}} чтобы приступить к поиску
+search-type-to-search = Нажмите {{kbd}} чтобы искать
 search-for-repositories = Искать репозитории
 
 ## Команды и инструменты
@@ -35,7 +35,7 @@ greeting-afternoon = Добрый день
 greeting-evening = Добрый вечер
 
 ## GitHub Education
-github-education-tagline = Учитесь. Кооперируйтесь. Развивайтесь.
+github-education-tagline = Учитесь. Кооперируйтесь. Развивайтесь
 github-education-description = GitHub Education предоставляет инструменты и поддержку сообщества, чтобы вы могли принимать технологические вызовы и превращать их в возможности. Ваше технологическое будущее начинается здесь!
 go-to-github-education = Перейти в GitHub Education
 
@@ -83,6 +83,21 @@ do-not-share-info = Не делитесь моей личной информац
 ## Действия и подсказки
 open-in-copilot-chat = Закрепить в разговоре с Копайлотом
 assign-to-copilot = Делегировать Копайлоту
+close-menu = Закрыть меню
+explore = Обзор
+marketplace = Магазин
+mcp-registry = Реестр MCP
+owners = Владельцы
+jump-to = Перейти
+repositories = Репозитории
+search-syntax-tips = Статья о синтаксисе поиска
+give-feedback = Оставить отзыв
+chat-with-copilot = Написать Копайлоту
+start-copilot-thread = Начать новую беседу с Копайлотом
+agents = Агенты
+branch = Ветка
+select-custom-agent = Выбрать своего агента
+start-task = Запустить выполнение задачи
 
 ## Форматы дат
 month-short-jan = янв.
