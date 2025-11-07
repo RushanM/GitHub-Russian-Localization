@@ -18,7 +18,7 @@
 // @namespace       githubrussianlocalization
 // @supportURL      https://github.com/RushanM/GitHub-Russian-Localization/issues
 // @updateURL       https://github.com/RushanM/GitHub-Russian-Localization/raw/master/github-russian-localization.user.js
-// @version         P29
+// @version         P30
 // ==/UserScript==
 
 (function() {
@@ -411,7 +411,21 @@
                 ['Repositories', 'repositories'],
                 ['Stars', 'stars'],
                 ['Gists', 'gists'],
-                ['Organizations', 'organizations']
+                ['Organizations', 'organizations'],
+                ['Enterprises', 'enterprises'],
+                ['Sponsors', 'sponsors'],
+                ['Settings', 'settings'],
+                ['Copilot settings', 'copilot-settings'],
+                ['Feature preview', 'feature-preview'],
+                ['Appearance', 'appearance'],
+                ['Accessibility', 'accessibility'],
+                ['Try Enterprise', 'try-enterprise'],
+                ['Sign out', 'sign-out'],
+                ['Repositories…', 'copilot-repositories'],
+                ['Files and folders…', 'files-and-folders'],
+                ['Spaces…', 'spaces'],
+                ['Upload from computer', 'upload-from-computer'],
+                ['Extensions…', 'extensions']
             ]);
 
             const selectors = ['.ActionListItem-label', '.prc-ActionList-ItemLabel-TmBhn'];
@@ -570,6 +584,23 @@
                 }
             });
 
+            // поле ввода «Search for repositories»
+            const repoSearchInputs = document.querySelectorAll('input[aria-label="Search for repositories"], input[placeholder="Search for repositories"]');
+            if (repoSearchInputs.length) {
+                const placeholderTranslation = this.getTranslation('search-for-repositories');
+                if (placeholderTranslation) {
+                    repoSearchInputs.forEach(input => {
+                        if (input.getAttribute('placeholder') !== placeholderTranslation) {
+                            input.setAttribute('placeholder', placeholderTranslation);
+                        }
+                        if (input.getAttribute('aria-label') !== placeholderTranslation) {
+                            input.setAttribute('aria-label', placeholderTranslation);
+                        }
+                        input.setAttribute('data-ru-localized', 'true');
+                    });
+                }
+            }
+
             // «Add repositories, files, and spaces»
             const attachmentButtons = document.querySelectorAll('.ChatInput-module__attachmentButtonText--fVuEs');
             attachmentButtons.forEach(button => {
@@ -591,6 +622,12 @@
             const newLabels = document.querySelectorAll('.prc-Label-Label--LG6X[data-size="small"][data-variant="accent"]');
             newLabels.forEach(label => {
                 this.localizeByText(label, 'New', 'new');
+            });
+
+            // метка Free («Бесплатно»)
+            const freeLabels = document.querySelectorAll('.prc-Label-Label--LG6X[data-size="small"][data-variant="primary"]');
+            freeLabels.forEach(label => {
+                this.localizeByText(label, 'Free', 'free');
             });
 
             // ссылка обратной связи
