@@ -18,7 +18,7 @@
 // @namespace       githubrussianlocalization
 // @supportURL      https://github.com/RushanM/GitHub-Russian-Localization/issues
 // @updateURL       https://github.com/RushanM/GitHub-Russian-Localization/raw/master/github-russian-localization.user.js
-// @version         P30
+// @version         P31
 // ==/UserScript==
 
 (function() {
@@ -399,6 +399,15 @@
             const translationMap = new Map([
                 ['Home', 'home'],
                 ['Feed', 'feed'],
+                ['Issues', 'issues'],
+                ['Pull requests', 'pull-requests'],
+                ['Projects', 'projects'],
+                ['Discussions', 'discussions'],
+                ['Codespaces', 'codespaces'],
+                ['Copilot', 'copilot'],
+                ['Explore', 'explore'],
+                ['Marketplace', 'marketplace'],
+                ['MCP registry', 'mcp-registry'],
                 ['New issue', 'new-issue'],
                 ['New repository', 'new-repository'],
                 ['Import repository', 'import-repository'],
@@ -421,6 +430,14 @@
                 ['Accessibility', 'accessibility'],
                 ['Try Enterprise', 'try-enterprise'],
                 ['Sign out', 'sign-out'],
+                ['Open', 'open'],
+                ['Closed', 'closed'],
+                ['Authored', 'authored'],
+                ['Mentioned', 'mentioned'],
+                ['Review requested', 'review-requested'],
+                ['Reviewed', 'reviewed'],
+                ['Assigned to me', 'assigned-to-me'],
+                ['Involves me', 'involves-me'],
                 ['Repositories…', 'copilot-repositories'],
                 ['Files and folders…', 'files-and-folders'],
                 ['Spaces…', 'spaces'],
@@ -438,6 +455,25 @@
 
                 const key = translationMap.get(text);
                 this.localizeByText(item, text, key);
+            });
+
+            const headingTranslationMap = new Map([
+                ['Agent sessions to include', 'agent-sessions-to-include'],
+                ['Number of results', 'number-of-results'],
+                ['Pull requests to include', 'pull-requests-to-include'],
+                ['Issues to include', 'issues-to-include']
+            ]);
+
+            const headingSelectors = ['.prc-ActionList-GroupHeading-eahp0'];
+            const headings = document.querySelectorAll(headingSelectors.join(', '));
+            headings.forEach(heading => {
+                const text = heading.textContent.trim();
+                if (!headingTranslationMap.has(text)) {
+                    return;
+                }
+
+                const key = headingTranslationMap.get(text);
+                this.localizeByText(heading, text, key);
             });
         }
 
@@ -760,34 +796,6 @@
         }
 
         /**
-         * локализация элементов навигации (Home, Feed, Issues и прочих)
-         */
-        localizeNavigationItems() {
-            const navigationTranslations = [
-                { text: 'Home', key: 'home' },
-                { text: 'Feed', key: 'feed' },
-                { text: 'Issues', key: 'issues' },
-                { text: 'Pull requests', key: 'pull-requests' },
-                { text: 'Projects', key: 'projects' },
-                { text: 'Discussions', key: 'discussions' },
-                { text: 'Codespaces', key: 'codespaces' },
-                { text: 'Copilot', key: 'copilot' },
-                { text: 'Explore', key: 'explore' },
-                { text: 'Marketplace', key: 'marketplace' },
-                { text: 'MCP registry', key: 'mcp-registry' }
-            ];
-
-            const navItems = document.querySelectorAll('.prc-ActionList-ItemLabel-TmBhn');
-            navItems.forEach(item => {
-                const text = item.textContent.trim();
-                const translation = navigationTranslations.find(t => t.text === text);
-                if (translation) {
-                    this.localizeByText(item, translation.text, translation.key);
-                }
-            });
-        }
-
-        /**
          * локализация элементов поиска («Search syntax tips», «Give feedback»)
          */
         localizeSearchElements() {
@@ -809,24 +817,19 @@
          */
         localizeCopilotSearchElements() {
             // заголовки разделов
+            const sectionTranslations = new Map([
+                ['Copilot', 'copilot'],
+                ['Owners', 'owners'],
+                ['Repositories', 'repositories'],
+                ['Agents', 'agents']
+            ]);
+
             const sectionTitles = document.querySelectorAll('.ActionList-sectionDivider-title');
             sectionTitles.forEach(title => {
                 const text = title.textContent.trim();
-                if (text === 'Copilot') {
-                    this.localizeByText(title, 'Copilot', 'copilot');
-                } else if (text === 'Owners') {
-                    this.localizeByText(title, 'Owners', 'owners');
-                } else if (text === 'Repositories') {
-                    this.localizeByText(title, 'Repositories', 'repositories');
-                } else if (text === 'Agents') {
-                    const agentsHeader = title.closest('.GlobalCopilotOverlay-module__header--mBq7d');
-                    if (agentsHeader) {
-                        // это заголовок в панели Agents
-                        const h2 = agentsHeader.querySelector('h2.f5');
-                        if (h2) {
-                            this.localizeByText(h2, 'Agents', 'agents');
-                        }
-                    }
+                const translationKey = sectionTranslations.get(text);
+                if (translationKey) {
+                    this.localizeByText(title, text, translationKey);
                 }
             });
 
@@ -862,7 +865,7 @@
                     const translation = this.getTranslation('branch');
                     if (translation) {
                         tooltip.textContent = `${translation}: ${branchName}`;
-                        console.log(`${LOG_PREFIX} Переведено: «Branch: ${branchName}» → «${translation}: ${branchName}»`);
+                        console.log(`${LOG_PREFIX} Translated: "Branch: ${branchName}" → "${translation}: ${branchName}"`);
                     }
                 }
             });
@@ -888,7 +891,7 @@
                 const translation = this.getTranslation('search-or-jump');
                 if (translation) {
                     input.setAttribute('placeholder', translation);
-                    console.log(`${LOG_PREFIX} Переведён placeholder: "Search or jump to..." → "${translation}"`);
+                    console.log(`${LOG_PREFIX} Translated placeholder: "Search or jump to..." → "${translation}"`);
                 }
             });
 
@@ -898,7 +901,7 @@
                 const translation = this.getTranslation('search-or-jump');
                 if (translation) {
                     input.setAttribute('placeholder', translation);
-                    console.log(`${LOG_PREFIX} Переведён command-palette placeholder: "Search or jump to..." → "${translation}"`);
+                    console.log(`${LOG_PREFIX} Translated command palette placeholder: "Search or jump to..." → "${translation}"`);
                 }
             });
 
@@ -908,7 +911,7 @@
                 const translation = this.getTranslation('search-or-jump');
                 if (translation) {
                     mode.setAttribute('data-placeholder', translation);
-                    console.log(`${LOG_PREFIX} Переведён data-placeholder: "Search or jump to..." → "${translation}"`);
+                    console.log(`${LOG_PREFIX} Translated data-placeholder: "Search or jump to..." → "${translation}"`);
                 }
             });
 
@@ -1014,7 +1017,7 @@
             helpHintDivs.forEach(div => {
                 const message = localizeHintElement(div);
                 if (message) {
-                    console.log(`${LOG_PREFIX} Переведено: «${message}»`);
+                    console.log(`${LOG_PREFIX} Translated: "${message}"`);
                 }
             });
 
@@ -1031,7 +1034,7 @@
                 if (rightDiv) {
                     const message = localizeHintElement(rightDiv);
                     if (message) {
-                        console.log(`${LOG_PREFIX} Переведена правая часть: «${message}»`);
+                        console.log(`${LOG_PREFIX} Translated trailing part: "${message}"`);
                     }
                 }
 
@@ -1047,14 +1050,14 @@
                         leftDiv.innerHTML = '';
                         leftDiv.appendChild(boldSpan);
                         leftDiv.appendChild(document.createTextNode(' ' + translation));
-                        console.log(`${LOG_PREFIX} Переведено: «Go to your accessibility settings...»`);
+                        console.log(`${LOG_PREFIX} Translated: "Go to your accessibility settings..."`);
                     }
                 }
                 else {
                     const options = boldSpan ? { leadingNodes: [boldSpan] } : undefined;
                     const message = localizeHintElement(leftDiv, options);
                     if (message) {
-                        console.log(`${LOG_PREFIX} Переведено: «${message}»`);
+                        console.log(`${LOG_PREFIX} Translated: "${message}"`);
                     }
                 }
             });
@@ -1126,7 +1129,7 @@
                                 if (fragment) {
                                     innerDiv.replaceChildren(fragment);
                                     innerDiv.setAttribute('data-ru-localized', 'true');
-                                    console.log(`${LOG_PREFIX} Переведено: «Enter to jump to Tab to search» с сохранением kbd`);
+                                    console.log(`${LOG_PREFIX} Translated: "Enter to jump to Tab to search" with preserved kbd`);
                                 }
                             }
                         }
@@ -1141,20 +1144,28 @@
         localizeCopilotTaskScreen() {
             // «Start a new task with Copilot»
             const taskHeadings = document.querySelectorAll('.GlobalCopilotOverlay-module__messageStateHeading--F5_1N');
+            const taskErrorVariants = [
+                'Tasks couldn\'t be loaded',
+                'Tasks couldn’t be loaded'
+            ];
+
             taskHeadings.forEach(heading => {
                 this.localizeByText(heading, 'Start a new task with Copilot', 'start-new-task-copilot');
+                taskErrorVariants.some(variant => this.localizeByText(heading, variant, 'tasks-couldnt-be-loaded'));
             });
 
             // описание
             const taskDescriptions = document.querySelectorAll('.GlobalCopilotOverlay-module__messageStateDescription--IWyBI');
             taskDescriptions.forEach(desc => {
                 this.localizeByText(desc, 'Describe your task in natural language. Copilot will work in the background and open a pull request for your review.', 'copilot-task-description');
+                this.localizeByText(desc, 'Try again or, if the problem persists, contact support.', 'try-again-or');
             });
 
             // ссылка «Learn more about Copilot coding agent»
             const learnMoreLinks = document.querySelectorAll('.GlobalCopilotOverlay-module__messageState--ORDxQ a.prc-Link-Link-85e08');
             learnMoreLinks.forEach(link => {
                 this.localizeByText(link, 'Learn more about Copilot coding agent', 'learn-more-copilot-agent');
+                this.localizeByText(link, 'GitHub status', 'github-status');
             });
 
             // уведомление «Copilot uses AI. Check for mistakes.» с сохранением ссылки
@@ -1212,31 +1223,36 @@
          * локализация сообщения об отсутствии сессий
          */
         localizeNoResultsMessages() {
-            const translation = this.getTranslation('no-sessions-found');
-            if (!translation) {
-                return;
-            }
-
-            const parts = translation.split(/\[link\]|\[\/link\]/);
-            if (parts.length < 3) {
-                return;
-            }
-
-            const prefix = parts[0] ?? '';
-            const linkText = parts[1] ?? '';
-            const suffix = parts.slice(2).join('');
-            const expectedTextNormalized = (prefix + linkText + suffix).replace(/\s+/g, ' ').trim();
-            const expectedLinkTextNormalized = linkText.replace(/\s+/g, ' ').trim();
+            const noSessionsTranslation = this.getTranslation('no-sessions-found');
+            const noSessionsParts = noSessionsTranslation ? noSessionsTranslation.split(/\[link\]|\[\/link\]/) : [];
+            const noSessionsPrefix = noSessionsParts[0] ?? '';
+            const noSessionsLinkText = noSessionsParts[1] ?? '';
+            const noSessionsSuffix = noSessionsParts.slice(2).join('');
+            const expectedTextNormalized = (noSessionsPrefix + noSessionsLinkText + noSessionsSuffix).replace(/\s+/g, ' ').trim();
+            const expectedLinkTextNormalized = noSessionsLinkText.replace(/\s+/g, ' ').trim();
             const englishNormalized = 'No sessions found. Try a different filter, or start a session.'.replace(/\s+/g, ' ').trim();
+            const unableToLoadTranslation = this.getTranslation('unable-to-load-agent-tasks');
+            const unableEnglish = 'Unable to load agent tasks, try again later.'.replace(/\s+/g, ' ').trim();
 
             const titles = document.querySelectorAll('.Title-module__title--YTYH_');
             titles.forEach(title => {
                 const link = title.querySelector('a');
+                const currentTextNormalized = title.textContent.replace(/\s+/g, ' ').trim();
+
                 if (!link) {
+                    if (unableToLoadTranslation && (currentTextNormalized === unableEnglish || title.getAttribute('data-ru-localized') !== 'true')) {
+                        if (currentTextNormalized !== unableToLoadTranslation) {
+                            title.textContent = unableToLoadTranslation;
+                        }
+                        title.setAttribute('data-ru-localized', 'true');
+                    }
                     return;
                 }
 
-                const currentTextNormalized = title.textContent.replace(/\s+/g, ' ').trim();
+                if (!noSessionsTranslation || noSessionsParts.length < 3) {
+                    return;
+                }
+
                 const currentLinkTextNormalized = link.textContent.replace(/\s+/g, ' ').trim();
 
                 const alreadyLocalized = currentTextNormalized === expectedTextNormalized && currentLinkTextNormalized === expectedLinkTextNormalized;
@@ -1256,10 +1272,10 @@
                 }
 
                 const fragment = document.createDocumentFragment();
-                fragment.appendChild(document.createTextNode(prefix));
-                link.textContent = linkText;
+                fragment.appendChild(document.createTextNode(noSessionsPrefix));
+                link.textContent = noSessionsLinkText;
                 fragment.appendChild(link);
-                fragment.appendChild(document.createTextNode(suffix));
+                fragment.appendChild(document.createTextNode(noSessionsSuffix));
 
                 title.replaceChildren(fragment);
                 title.setAttribute('data-ru-localized', 'true');
@@ -1364,6 +1380,7 @@
             });
 
             // локализация текстов «Created on», «Opened by», Updated в описаниях элементов
+            const numberSignTranslation = this.getTranslation('number-sign');
             const descriptions = document.querySelectorAll('.Description-module__container--Ks2Eo');
             descriptions.forEach(desc => {
                 const text = desc.textContent || '';
@@ -1453,6 +1470,21 @@
                         if (html !== originalHTML) {
                             desc.innerHTML = html;
                             desc.setAttribute('data-created-localized', 'true');
+                        }
+                    }
+                }
+
+                if (numberSignTranslation && text.includes('#')) {
+                    const numberWalker = document.createTreeWalker(desc, NodeFilter.SHOW_TEXT, null);
+                    let numberNode;
+                    while ((numberNode = numberWalker.nextNode())) {
+                        if (!numberNode.textContent || !numberNode.textContent.includes('#')) {
+                            continue;
+                        }
+
+                        const updated = numberNode.textContent.replace(/#(?=\d)/g, numberSignTranslation);
+                        if (updated !== numberNode.textContent) {
+                            numberNode.textContent = updated;
                         }
                     }
                 }
@@ -1648,6 +1680,71 @@
         }
 
         /**
+         * локализация страницы настройки предпочтений куки
+         */
+        localizeCookiePreferencesPage() {
+            const cookieHeadingTranslation = this.getTranslation('manage-cookie-preferences');
+            const cookieHeadingEnglish = 'Manage cookie preferences';
+
+            if (cookieHeadingTranslation) {
+                const headingElements = document.querySelectorAll('h1');
+                headingElements.forEach(heading => {
+                    if (heading.textContent.trim() === cookieHeadingEnglish) {
+                        this.localizeByText(heading, cookieHeadingEnglish, 'manage-cookie-preferences');
+                    }
+                });
+            }
+
+            const cookieDescriptionTranslation = this.getTranslation('most-github-websites-use-cookies');
+            const cookieDescriptionEnglish = 'Most GitHub websites use cookies. Cookies are small text files placed on your device to store data so web servers can use it later. GitHub and our third-party partners use cookies to remember your preferences and settings, help you sign in, show you personalized ads, and analyze how well our websites are working. For more info, see the Cookies and similar technologies section of the Privacy Statement.';
+
+            if (!cookieDescriptionTranslation) {
+                return;
+            }
+
+            const parts = cookieDescriptionTranslation.split(/\[link\]|\[\/link\]/);
+            const hasLink = parts.length >= 3;
+
+            const paragraphs = document.querySelectorAll('form p');
+            paragraphs.forEach(paragraph => {
+                const normalizedText = paragraph.textContent.replace(/\s+/g, ' ').trim();
+                const englishNormalized = cookieDescriptionEnglish.replace(/\s+/g, ' ').trim();
+
+                const shouldLocalize = normalizedText === englishNormalized || paragraph.getAttribute('data-ru-localized') !== 'true';
+                if (!shouldLocalize) {
+                    return;
+                }
+
+                if (hasLink) {
+                    const link = paragraph.querySelector('a');
+                    if (!link) {
+                        this.localizeByText(paragraph, cookieDescriptionEnglish, 'most-github-websites-use-cookies');
+                        return;
+                    }
+
+                    const prefix = parts[0] ?? '';
+                    const linkText = parts[1] ?? '';
+                    const suffix = parts.slice(2).join('');
+
+                    const fragment = document.createDocumentFragment();
+                    if (prefix) {
+                        fragment.appendChild(document.createTextNode(prefix));
+                    }
+                    link.textContent = linkText;
+                    fragment.appendChild(link);
+                    if (suffix) {
+                        fragment.appendChild(document.createTextNode(suffix));
+                    }
+
+                    paragraph.replaceChildren(fragment);
+                    paragraph.setAttribute('data-ru-localized', 'true');
+                } else {
+                    this.localizeByText(paragraph, cookieDescriptionEnglish, 'most-github-websites-use-cookies');
+                }
+            });
+        }
+
+        /**
          * локализует подвал (footer)
          */
         localizeFooter() {
@@ -1712,7 +1809,6 @@
             this.localizeCommandPills();
             this.localizeDashboardElements();
             this.localizeDashboardTooltips();
-            this.localizeNavigationItems();
             this.localizeSearchElements();
             this.localizeCopilotSearchElements();
             this.localizeBranchTooltips();
@@ -1722,6 +1818,7 @@
             this.localizeNoResultsMessages();
             this.localizeUpdatedText();
             this.localizeRelativeTime();
+            this.localizeCookiePreferencesPage();
             this.localizeFooter();
         }
 
