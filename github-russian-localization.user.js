@@ -18,7 +18,7 @@
 // @namespace       githubrussianlocalization
 // @supportURL      https://github.com/RushanM/GitHub-Russian-Localization/issues
 // @updateURL       https://github.com/RushanM/GitHub-Russian-Localization/raw/master/github-russian-localization.user.js
-// @version         P31
+// @version         P32
 // ==/UserScript==
 
 (function() {
@@ -1231,6 +1231,10 @@
             const expectedTextNormalized = (noSessionsPrefix + noSessionsLinkText + noSessionsSuffix).replace(/\s+/g, ' ').trim();
             const expectedLinkTextNormalized = noSessionsLinkText.replace(/\s+/g, ' ').trim();
             const englishNormalized = 'No sessions found. Try a different filter, or start a session.'.replace(/\s+/g, ' ').trim();
+            const englishLinkTextCandidates = [
+                'start a session',
+                'start a session.'
+            ].map(text => text.replace(/\s+/g, ' ').trim());
             const unableToLoadTranslation = this.getTranslation('unable-to-load-agent-tasks');
             const unableEnglish = 'Unable to load agent tasks, try again later.'.replace(/\s+/g, ' ').trim();
 
@@ -1240,12 +1244,25 @@
                 const currentTextNormalized = title.textContent.replace(/\s+/g, ' ').trim();
 
                 if (!link) {
-                    if (unableToLoadTranslation && (currentTextNormalized === unableEnglish || title.getAttribute('data-ru-localized') !== 'true')) {
-                        if (currentTextNormalized !== unableToLoadTranslation) {
-                            title.textContent = unableToLoadTranslation;
-                        }
-                        title.setAttribute('data-ru-localized', 'true');
+                    if (!unableToLoadTranslation) {
+                        return;
                     }
+
+                    const isAlreadyLocalized = currentTextNormalized === unableToLoadTranslation;
+                    if (isAlreadyLocalized) {
+                        if (title.getAttribute('data-ru-localized') !== 'true') {
+                            title.setAttribute('data-ru-localized', 'true');
+                        }
+                        return;
+                    }
+
+                    const matchesEnglish = currentTextNormalized === unableEnglish;
+                    if (!matchesEnglish) {
+                        return;
+                    }
+
+                    title.textContent = unableToLoadTranslation;
+                    title.setAttribute('data-ru-localized', 'true');
                     return;
                 }
 
@@ -1263,11 +1280,9 @@
                     return;
                 }
 
-                const shouldRelocalize = currentTextNormalized === englishNormalized
-                    || currentTextNormalized.includes('No sessions found')
-                    || title.getAttribute('data-ru-localized') !== 'true';
-
-                if (!shouldRelocalize) {
+                const matchesEnglish = currentTextNormalized === englishNormalized
+                    && englishLinkTextCandidates.includes(currentLinkTextNormalized);
+                if (!matchesEnglish) {
                     return;
                 }
 
