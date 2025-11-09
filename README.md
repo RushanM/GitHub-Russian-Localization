@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://raw.githubusercontent.com/RushanM/GitHub-Russian-Translation/refs/heads/master/assets/icon_2025-3-13-22_160.png" alt="Осьмикот, маскот GitHub, в шапке-ушанке" title="Можете нарисовать лучше? Не против принять помощь!">
+<img src="https://raw.githubusercontent.com/RushanM/GitHub-Russian-Localization/refs/heads/master/assets/icon_2025-3-13-22_160.png" alt="Осьмикот, маскот GitHub, в шапке-ушанке" title="Можете нарисовать лучше? Не против принять помощь!">
 <h1>Русская локализация GitHub</h1>
 </div>
 
@@ -12,15 +12,15 @@
 ### Пользовательский сценарий
 
 1. Установите [расширение Violentmonkey](https://addons.mozilla.org/en-US/firefox/addon/violentmonkey/) или аналог.
-2. Откройте ссылку на сценарий c [GitHub](https://github.com/RushanM/GitHub-Russian-Translation/raw/refs/heads/master/Monkey/GitHub-Ru-Translation.user.js) или [Greasy Fork](https://greasyfork.org/ru/scripts/515487-github-russian-translation).
+2. Откройте ссылку на сценарий c [GitHub](https://github.com/RushanM/GitHub-Russian-Localization/raw/refs/heads/master/github-russian-localization.user.js) или [Greasy Fork](https://greasyfork.org/ru/scripts/515487-github-russian-localization).
 3. Установите сценарий.
-3. Обновите страницу GitHub, если она была открыта.
-4. Готово!
+4. Обновите страницу GitHub, если она была открыта.
+5. Готово!
 
 ### Расширение для Firefox и его форков
 
 1. Нажмите зелёную кнопку `< > Code ▾` над репозиторием.
-2. Нажмите [**`Download ZIP`**](https://github.com/RushanM/GitHub-Russian-Translation/archive/refs/heads/master.zip) cнизу появившегося окна, чтобы скачать архив.
+2. Нажмите [**`Download ZIP`**](https://github.com/RushanM/GitHub-Russian-Localization/archive/refs/heads/master.zip) cнизу появившегося окна, чтобы скачать архив.
 3. Откройте архив.
 3. Распакуйте папку Firefox в любое место.
 4. Откройте страницу `about:debugging#/runtime/this-firefox` в Firefox или его форке.

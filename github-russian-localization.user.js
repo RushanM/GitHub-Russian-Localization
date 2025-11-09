@@ -18,7 +18,7 @@
 // @namespace       githubrussianlocalization
 // @supportURL      https://github.com/RushanM/GitHub-Russian-Localization/issues
 // @updateURL       https://github.com/RushanM/GitHub-Russian-Localization/raw/master/github-russian-localization.user.js
-// @version         P32
+// @version         P33
 // ==/UserScript==
 
 (function() {
@@ -314,7 +314,7 @@
             const searchInput = document.querySelector('#qb-input-query');
             if (!searchInput) return;
             
-            const translation = this.getTranslation('search-type-to-search');
+            const translation = this.getTranslation('type-slash-to-search');
             if (!translation) return;
 
             const normalizedTranslation = this.normalizeSearchPlaceholderText(translation);
@@ -388,7 +388,7 @@
             // «Chat with Copilot»
             const copilotTooltips = document.querySelectorAll('tool-tip[for="copilot-chat-header-button"]');
             copilotTooltips.forEach(tooltip => {
-                this.localizeByText(tooltip, 'Chat with Copilot', 'copilot-chat');
+                this.localizeByText(tooltip, 'Chat with Copilot', 'chat-with-copilot');
             });
         }
 
@@ -484,7 +484,7 @@
             const tooltipTranslations = [
                 { selector: 'tool-tip[for="global-copilot-agent-button"]', text: 'Open agents panel', key: 'open-agents-panel' },
                 { selector: 'tool-tip[for="global-create-menu-anchor"]', text: 'Create new…', key: 'create-new' },
-                { selector: 'tool-tip#notification-indicator-tooltip', text: 'You have no unread notifications', key: 'no-unread-notifications' }
+                { selector: 'tool-tip#notification-indicator-tooltip', text: 'You have no unread notifications', key: 'you-have-no-notifications' }
             ];
 
             tooltipTranslations.forEach(({ selector, text, key }) => {
@@ -529,10 +529,10 @@
                 
                 // установки для разных приветствий
                 const patterns = [
-                    { regex: /^Good night,\s*(.+)!$/, key: 'greeting-night' },
-                    { regex: /^Good morning,\s*(.+)!$/, key: 'greeting-morning' },
-                    { regex: /^Good afternoon,\s*(.+)!$/, key: 'greeting-afternoon' },
-                    { regex: /^Good evening,\s*(.+)!$/, key: 'greeting-evening' }
+                    { regex: /^Good night,\s*(.+)!$/, key: 'good-night' },
+                    { regex: /^Good morning,\s*(.+)!$/, key: 'good-morning' },
+                    { regex: /^Good afternoon,\s*(.+)!$/, key: 'good-afternoon' },
+                    { regex: /^Good evening,\s*(.+)!$/, key: 'good-evening' }
                 ];
 
                 const alreadyLocalized = patterns.some(pattern => {
@@ -566,14 +566,14 @@
             // заголовок
             const taglines = document.querySelectorAll('.h4');
             taglines.forEach(el => {
-                this.localizeByText(el, 'Learn. Collaborate. Grow.', 'github-education-tagline');
+                this.localizeByText(el, 'Learn. Collaborate. Grow.', 'learn-collaborate-grow');
             });
 
             // описание
             const descriptions = document.querySelectorAll('p.my-3.text-small');
             descriptions.forEach(el => {
                 const text = el.textContent.trim().replace(/\s+/g, ' ');
-                const translation = this.getTranslation('github-education-description');
+                const translation = this.getTranslation('github-education-gives-here');
                 if (!translation) return;
 
                 if (text === translation) {
@@ -698,7 +698,7 @@
             // «Latest from our changelog»
             const changelogTitles = document.querySelectorAll('.dashboard-changelog__title');
             changelogTitles.forEach(title => {
-                this.localizeByText(title, 'Latest from our changelog', 'latest-from-changelog');
+                this.localizeByText(title, 'Latest from our changelog', 'latest-from-our-changelog');
             });
 
             // «Agent sessions», «Pull requests», «Issues»
@@ -924,7 +924,7 @@
             const hintConfigs = [
                 {
                     tokens: ['Type', '@', 'to search people and organizations'],
-                    translationKey: 'type-at-to-search-people',
+                    translationKey: 'type-at-to-search',
                     identifier: '@',
                     logMessage: 'Type @ to search people...'
                 },
@@ -936,19 +936,19 @@
                 },
                 {
                     tokens: ['Type', '#', 'to search issues'],
-                    translationKey: 'type-hash-to-search-issues',
+                    translationKey: 'type-hash-to-issues',
                     identifier: '#',
                     logMessage: 'Type # to search issues'
                 },
                 {
                     tokens: ['Type', '>', 'to activate command mode'],
-                    translationKey: 'type-gt-to-activate-command',
+                    translationKey: 'type-gt-to-command',
                     identifier: '>',
                     logMessage: 'Type > to activate command mode'
                 },
                 {
                     tokens: ['Type', '#', 'to search pull requests'],
-                    translationKey: 'type-hash-to-search-prs',
+                    translationKey: 'type-hash-to-prs',
                     identifier: '#',
                     logMessage: 'Type # to search pull requests'
                 }
@@ -1235,7 +1235,7 @@
                 'start a session',
                 'start a session.'
             ].map(text => text.replace(/\s+/g, ' ').trim());
-            const unableToLoadTranslation = this.getTranslation('unable-to-load-agent-tasks');
+            const unableToLoadTranslation = this.getTranslation('unable-to-load-agent');
             const unableEnglish = 'Unable to load agent tasks, try again later.'.replace(/\s+/g, ' ').trim();
 
             const titles = document.querySelectorAll('.Title-module__title--YTYH_');

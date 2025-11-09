@@ -1,10 +1,10 @@
 {
     "manifest_version": 3,
-    "name": "GitHub Russian Translation",
-    "version": "0.27.1",
+    "name": "GitHub Russian Localization",
+    "version": "0.27.2",
     "description": "Переводит сайты GitHub на русский язык",
     "author": "Rushan Mukhutdinov \"Deflecat\"",
-    "homepage_url": "https://github.com/RushanM/GitHub-Russian-Translation",
+    "homepage_url": "https://github.com/RushanM/GitHub-Russian-Localization",
     "icons": {
         "48": "icons/icon48.png",
         "96": "icons/icon96.png",
