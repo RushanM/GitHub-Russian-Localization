@@ -18,7 +18,7 @@
 // @namespace       githubrussianlocalization
 // @supportURL      https://github.com/RushanM/GitHub-Russian-Localization/issues
 // @updateURL       https://github.com/RushanM/GitHub-Russian-Localization/raw/master/github-russian-localization.user.js
-// @version         P33
+// @version         P34
 // ==/UserScript==
 
 (function() {
@@ -1721,12 +1721,14 @@
             const hasLink = parts.length >= 3;
 
             const paragraphs = document.querySelectorAll('form p');
+            const englishNormalized = cookieDescriptionEnglish.replace(/\s+/g, ' ').trim();
+
             paragraphs.forEach(paragraph => {
                 const normalizedText = paragraph.textContent.replace(/\s+/g, ' ').trim();
-                const englishNormalized = cookieDescriptionEnglish.replace(/\s+/g, ' ').trim();
+                const alreadyLocalized = paragraph.getAttribute('data-ru-localized') === 'true';
+                const matchesEnglish = normalizedText === englishNormalized;
 
-                const shouldLocalize = normalizedText === englishNormalized || paragraph.getAttribute('data-ru-localized') !== 'true';
-                if (!shouldLocalize) {
+                if (!matchesEnglish && !alreadyLocalized) {
                     return;
                 }
 
