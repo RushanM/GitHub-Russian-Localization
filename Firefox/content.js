@@ -46,7 +46,7 @@ function initTranslation() {
 
     // загружаем переводы из удалённого файла ru_old.json и объединяем все секции
     let translations = {};
-    fetch("https://raw.githubusercontent.com/RushanM/GitHub-Russian-Localization/refs/heads/master/locales/ru_old.json")
+    fetch("https://raw.githubusercontent.com/RushanM/GitHub-Russian-Localization/refs/heads/master/l10n/ru_old.json")
         .then(response => response.json())
         .then(data => {
             // сохраняем перевод из dashboard для Chat with Copilot

@@ -5,7 +5,7 @@
 // @contributionURL https://boosty.to/rushanm
 // @description     Localizes GitHub websites into Russian
 // @description:ru  Локализует сайты GitHub на русский язык
-// @downloadURL     https://github.com/RushanM/GitHub-Russian-Localization/raw/master/github-russian-localization.user.js
+// @downloadURL     https://github.com/RushanM/GitHub-Russian-Localization/raw/master/github-russian-l10n.user.js
 // @grant           none
 // @homepageURL     https://github.com/RushanM/GitHub-Russian-Localization
 // @icon            https://github.githubassets.com/favicons/favicon.png
@@ -17,16 +17,16 @@
 // @run-at          document-end
 // @namespace       githubrussianlocalization
 // @supportURL      https://github.com/RushanM/GitHub-Russian-Localization/issues
-// @updateURL       https://github.com/RushanM/GitHub-Russian-Localization/raw/master/github-russian-localization.user.js
-// @version         P34
+// @updateURL       https://github.com/RushanM/GitHub-Russian-Localization/raw/master/github-russian-l10n.user.js
+// @version         P35
 // ==/UserScript==
 
 (function() {
     'use strict';
 
-    // ссылка на локализационный файл формата FTL locales/ru.ftl в репозитории
-    const FTL_URL = 'https://raw.githubusercontent.com/RushanM/GitHub-Russian-Localization/master/locales/ru.ftl';
-    const LOG_PREFIX = '[GitHubRu]';
+    // ссылка на локализационный файл формата FTL l10n/ru.ftl в репозитории
+    const FTL_URL = 'https://raw.githubusercontent.com/RushanM/GitHub-Russian-Localization/master/l10n/ru.ftl';
+    const LOG_PREFIX = '[GHRL10N]';
     
     /**
      * синтаксический анализатор FTL
@@ -442,7 +442,11 @@
                 ['Files and folders…', 'files-and-folders'],
                 ['Spaces…', 'spaces'],
                 ['Upload from computer', 'upload-from-computer'],
-                ['Extensions…', 'extensions']
+                ['Extensions…', 'extensions'],
+                ['New agent session', 'new-agent-session'],
+                ['Basic Git commands', 'basic-git-commands'],
+                ['Git branching', 'git-branching'],
+                ['Advanced Git commands', 'advanced-git-commands']
             ]);
 
             const selectors = ['.ActionListItem-label', '.prc-ActionList-ItemLabel-TmBhn'];
@@ -461,10 +465,14 @@
                 ['Agent sessions to include', 'agent-sessions-to-include'],
                 ['Number of results', 'number-of-results'],
                 ['Pull requests to include', 'pull-requests-to-include'],
-                ['Issues to include', 'issues-to-include']
+                ['Issues to include', 'issues-to-include'],
+                ['Models', 'models'],
+                ['Fast and cost-efficient', 'fast-and-cost-efficient'],
+                ['Versatile and highly intelligent', 'versatile-and-highly-intelligent'],
+                ['Most powerful at complex tasks', 'most-powerful-at-complex']
             ]);
 
-            const headingSelectors = ['.prc-ActionList-GroupHeading-eahp0'];
+            const headingSelectors = ['.prc-ActionList-GroupHeading-eahp0', '.ModelPicker-module__menuHeading--PBTLv'];
             const headings = document.querySelectorAll(headingSelectors.join(', '));
             headings.forEach(heading => {
                 const text = heading.textContent.trim();
@@ -505,7 +513,8 @@
             const dynamicTranslations = [
                 { text: 'Your issues', key: 'your-issues' },
                 { text: 'Your pull requests', key: 'your-pull-requests' },
-                { text: 'Account switcher', key: 'account-switcher' }
+                { text: 'Account switcher', key: 'account-switcher' },
+                { text: 'Repositories', key: 'repositories' }
             ];
 
             const allTooltips = document.querySelectorAll('tool-tip, .prc-TooltipV2-Tooltip-cYMVY');
@@ -654,6 +663,11 @@
                 this.localizeByText(label, 'Preview', 'preview');
             });
 
+            const modelPreviewLabels = document.querySelectorAll('.ModelPicker-module__modelMetaLabel--zMick');
+            modelPreviewLabels.forEach(label => {
+                this.localizeByText(label, 'Preview', 'preview');
+            });
+
             // метка New («Новинка»)
             const newLabels = document.querySelectorAll('.prc-Label-Label--LG6X[data-size="small"][data-variant="accent"]');
             newLabels.forEach(label => {
@@ -670,6 +684,48 @@
             const feedbackLinks = document.querySelectorAll('a.CopilotHeaderBase-module__feedbackLink--fnf2R');
             feedbackLinks.forEach(link => {
                 this.localizeByText(link, 'Feedback', 'feedback');
+            });
+
+            const linkButtons = document.querySelectorAll('button.prc-Link-Link-85e08');
+            linkButtons.forEach(button => {
+                this.localizeByText(button, 'Give feedback', 'give-feedback');
+                this.localizeByText(button, 'Switch back', 'switch-back');
+            });
+
+            const autoButtons = document.querySelectorAll('.ModelPicker-module__buttonName--Iid1H');
+            autoButtons.forEach(button => {
+                this.localizeByText(button, 'Auto', 'auto');
+            });
+
+            // уведомление о лимите премиум-запросов
+            const footerElements = document.querySelectorAll('.ModelPicker-module__footer--yCNLJ');
+            footerElements.forEach(footer => {
+                if (footer.hasAttribute('data-ru-localized')) return;
+                
+                const text = footer.textContent.trim();
+                if (text.includes('You have used 80%') && text.includes('premium requests')) {
+                    const translation = this.getTranslation('you-have-used-eighty');
+                    if (!translation) return;
+                    
+                    const link = footer.querySelector('a');
+                    if (!link) return;
+                    
+                    const parts = translation.split(/\[link\]|\[\/link\]/);
+                    if (parts.length >= 3) {
+                        const prefix = parts[0] ?? '';
+                        const linkText = parts[1] ?? '';
+                        const suffix = parts.slice(2).join('');
+                        
+                        const fragment = document.createDocumentFragment();
+                        if (prefix) fragment.appendChild(document.createTextNode(prefix));
+                        link.textContent = linkText;
+                        fragment.appendChild(link);
+                        if (suffix) fragment.appendChild(document.createTextNode(suffix));
+                        
+                        footer.replaceChildren(fragment);
+                        footer.setAttribute('data-ru-localized', 'true');
+                    }
+                }
             });
         }
 
@@ -730,6 +786,12 @@
             const changelogLinks = document.querySelectorAll('a.text-small.mt-2.Link--muted[href*="changelog"]');
             changelogLinks.forEach(link => {
                 this.localizeByText(link, 'View changelog →', 'view-changelog');
+            });
+
+            // кнопка «Pull requests»
+            const starterTitles = document.querySelectorAll('.StarterPill-module__title--Nsp36');
+            starterTitles.forEach(title => {
+                this.localizeByText(title, 'Pull requests', 'pull-requests');
             });
         }
 
@@ -1706,6 +1768,37 @@
                 headingElements.forEach(heading => {
                     if (heading.textContent.trim() === cookieHeadingEnglish) {
                         this.localizeByText(heading, cookieHeadingEnglish, 'manage-cookie-preferences');
+                    }
+                });
+            }
+
+            // локализация заголовков категорий куки
+            const cookieCategoryTranslations = [
+                { text: 'Required', key: 'required' },
+                { text: 'Analytics', key: 'analytics' },
+                { text: 'Social media', key: 'social-media' },
+                { text: 'Advertising', key: 'advertising' }
+            ];
+            
+            const categoryHeadings = document.querySelectorAll('h2');
+            categoryHeadings.forEach(heading => {
+                const text = heading.textContent.trim();
+                const translation = cookieCategoryTranslations.find(t => t.text === text);
+                if (translation) {
+                    this.localizeByText(heading, translation.text, translation.key);
+                }
+            });
+
+            // локализация описания «Required»
+            const requiredDescriptionEnglish = 'GitHub uses required cookies to perform essential website functions and to provide the services. For example, cookies are used to log you in, save your language preferences, provide a shopping cart experience, improve performance, route traffic between web servers, detect the size of your screen, determine page load times, improve user experience, and for audience measurement. These cookies are necessary for our websites to work.';
+            const requiredDescriptionTranslation = this.getTranslation('github-uses-required-work');
+            
+            if (requiredDescriptionTranslation) {
+                const paragraphs = document.querySelectorAll('p');
+                paragraphs.forEach(p => {
+                    const normalizedText = p.textContent.replace(/\s+/g, ' ').trim();
+                    if (normalizedText === requiredDescriptionEnglish.replace(/\s+/g, ' ').trim()) {
+                        this.localizeByText(p, requiredDescriptionEnglish, 'github-uses-required-work');
                     }
                 });
             }
