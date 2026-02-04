@@ -18,7 +18,7 @@
 // @namespace       githubrussianlocalization
 // @supportURL      https://github.com/RushanM/GitHub-Russian-Localization/issues
 // @updateURL       https://github.com/RushanM/GitHub-Russian-Localization/raw/master/github-russian-l10n.user.js
-// @version         P35
+// @version         P36
 // ==/UserScript==
 
 (function() {
@@ -114,6 +114,33 @@
         }
 
         /**
+         * локализация элемента БЕЗ защиты от изменений
+         * используется для элементов, которые могут динамически меняться (например, Ask/Task)
+         */
+        localizeByTextDynamic(element, translations) {
+            if (!element || !element.textContent) return false;
+            
+            const currentText = element.textContent.trim();
+            
+            // проверяем каждую пару оригинал → перевод
+            for (const { original, key } of translations) {
+                const translation = this.getTranslation(key);
+                if (!translation) continue;
+                
+                // если текст уже переведён, пропускаем
+                if (currentText === translation) return false;
+                
+                // если текст совпадает с оригиналом, переводим
+                if (currentText === original) {
+                    element.textContent = translation;
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+
+        /**
          * защита элемента от изменения текста обратно на английский
          */
         protectElement(element, translatedText) {
@@ -152,8 +179,15 @@
          * локализация хлебной крошки Dashboard
          */
         localizeDashboard() {
+            // старый селектор
             const dashboardElements = document.querySelectorAll('.AppHeader-context-item-label');
             dashboardElements.forEach(el => {
+                this.localizeByText(el, 'Dashboard', 'dashboard');
+            });
+            
+            // новый селектор для хлебных крошек
+            const breadcrumbElements = document.querySelectorAll('.styles-module__contextCrumbLast__cE7QReI');
+            breadcrumbElements.forEach(el => {
                 this.localizeByText(el, 'Dashboard', 'dashboard');
             });
         }
@@ -311,6 +345,31 @@
          * локализация поисковой строки «Type / to search»
          */
         localizeSearchPlaceholder() {
+            // новый селектор для поисковой строки в шапке
+            const searchPlaceholder = document.querySelector('.Search-module__placeholder__Ke68F3b');
+            if (searchPlaceholder) {
+                const translation = this.getTranslation('type-slash-to-search');
+                if (translation) {
+                    const currentText = searchPlaceholder.textContent.replace(/\s+/g, ' ').trim();
+                    const hasOriginalText = currentText.includes('Type') && currentText.includes('to search');
+                    const normalizedTranslation = this.normalizeSearchPlaceholderText(translation);
+
+                    if (searchPlaceholder.getAttribute('data-ru-localized') === 'true') {
+                        if (hasOriginalText || !searchPlaceholder.querySelector('kbd')) {
+                            this.renderSearchPlaceholder(searchPlaceholder, translation);
+                        }
+                        return;
+                    }
+
+                    if (hasOriginalText) {
+                        this.renderSearchPlaceholder(searchPlaceholder, translation);
+                        searchPlaceholder.setAttribute('data-ru-localized', 'true');
+                    }
+                }
+                return;
+            }
+
+            // старый селектор (для совместимости)
             const searchInput = document.querySelector('#qb-input-query');
             if (!searchInput) return;
             
@@ -389,6 +448,130 @@
             const copilotTooltips = document.querySelectorAll('tool-tip[for="copilot-chat-header-button"]');
             copilotTooltips.forEach(tooltip => {
                 this.localizeByText(tooltip, 'Chat with Copilot', 'chat-with-copilot');
+            });
+        }
+
+        /**
+         * локализация всплывающих подсказок шапки страницы (AppHeader)
+         * обрабатывает tooltips с горячими клавишами и без них
+         */
+        localizeAppHeaderTooltips() {
+            // маппирование латинских клавиш на русские (по позиции на клавиатуре)
+            const keyboardMap = {
+                'G': 'П', 'g': 'п',
+                'I': 'Ш', 'i': 'ш',
+                'K': 'Л', 'k': 'л',
+                'P': 'З', 'p': 'з',
+                'N': 'Т', 'n': 'т',
+                'D': 'В', 'd': 'в'
+            };
+
+            // конфигурация подсказок для локализации
+            const tooltipConfigs = [
+                // простые подсказки (без клавиш или клавиши не переводятся)
+                { text: 'Open menu', key: 'open-menu', translateKeys: false },
+                { text: 'Homepage', key: 'homepage', translateKeys: false },
+                { text: 'Chat with Copilot', key: 'chat-with-copilot', translateKeys: false },
+                { text: 'Create new...', key: 'create-new', translateKeys: false },
+                { text: 'Repositories', key: 'repositories', translateKeys: false },
+                { text: 'Open user navigation menu', key: 'open-user-navigation-menu', translateKeys: false },
+                { text: 'Search for repositories', key: 'search-for-repositories', translateKeys: false },
+                { text: 'Add repositories, files, and spaces', key: 'add-repositories-files-spaces', translateKeys: false },
+                // подсказки с клавишами, которые нужно перевести
+                { text: 'Command palette', key: 'command-palette', translateKeys: true },
+                { text: 'Issues', key: 'issues', translateKeys: true },
+                { text: 'Pull requests', key: 'pull-requests', translateKeys: true },
+                { text: 'You have no unread notifications', key: 'you-have-no-notifications', translateKeys: true },
+                // подсказки с клавишами, которые не нужно переводить (пиктограмма клавиши ввода, символы и т. п.)
+                { text: 'Send now', key: 'send-now', translateKeys: false, preserveKbd: true }
+            ];
+
+            // находим все tooltips в шапке
+            const tooltips = document.querySelectorAll('.prc-TooltipV2-Tooltip-tLeuB');
+            
+            tooltips.forEach(tooltip => {
+                if (tooltip.hasAttribute('data-ru-localized')) return;
+
+                // находим span с id (основной текст подсказки)
+                const textSpan = tooltip.querySelector('span[id]');
+                if (!textSpan) {
+                    // структура без вложенных элементов
+                    const tooltipText = tooltip.textContent.trim();
+                    const config = tooltipConfigs.find(c => c.text === tooltipText);
+                    if (config) {
+                        const translation = this.getTranslation(config.key);
+                        if (translation) {
+                            tooltip.textContent = translation;
+                            tooltip.setAttribute('data-ru-localized', 'true');
+                        }
+                    }
+                    return;
+                }
+
+                // извлекаем видимый текст (без скрытых элементов и kbd)
+                const hiddenSpan = textSpan.querySelector('.prc-src-InternalVisuallyHidden-2YaI6');
+                const kbdElement = textSpan.querySelector('kbd');
+                let visibleText = textSpan.textContent.trim();
+                if (hiddenSpan) {
+                    visibleText = visibleText.replace(hiddenSpan.textContent, '').trim();
+                }
+                if (kbdElement) {
+                    visibleText = visibleText.replace(kbdElement.textContent, '').trim();
+                }
+
+                // ищем подходящую конфигурацию
+                const config = tooltipConfigs.find(c => c.text === visibleText);
+                if (!config) return;
+
+                const translation = this.getTranslation(config.key);
+                if (!translation) return;
+
+                // заменяем текст
+                if (config.preserveKbd) {
+                    // сохраняем элемент kbd при замене текста
+                    const kbdElement = textSpan.querySelector('kbd');
+                    if (kbdElement) {
+                        const kbdClone = kbdElement.cloneNode(true);
+                        textSpan.textContent = translation + ' ';
+                        textSpan.appendChild(kbdClone);
+                    } else {
+                        textSpan.textContent = translation;
+                    }
+                } else if (hiddenSpan) {
+                    // сохраняем скрытый span и заменяем текстовые узлы
+                    const hiddenClone = hiddenSpan.cloneNode(true);
+                    textSpan.textContent = translation + ' ';
+                    textSpan.appendChild(hiddenClone);
+                } else {
+                    textSpan.textContent = translation;
+                }
+
+                // переводим клавиши, если нужно
+                if (config.translateKeys) {
+                    // обрабатываем элементы kbd с горячими клавишами
+                    const kbdContainer = tooltip.querySelector('.prc-TooltipV2-KeybindingHintContainer-Ymj-3');
+                    if (kbdContainer) {
+                        // находим все отображаемые буквы клавиш
+                        const keySpans = kbdContainer.querySelectorAll('[data-kbd-chord] span[aria-hidden="true"]');
+                        keySpans.forEach(keySpan => {
+                            const keyText = keySpan.textContent.trim();
+                            if (keyboardMap[keyText]) {
+                                keySpan.textContent = keyboardMap[keyText];
+                            }
+                        });
+
+                        // обновляем скрытые тексты для доступности
+                        const hiddenKeySpans = kbdContainer.querySelectorAll('.prc-src-InternalVisuallyHidden-2YaI6');
+                        hiddenKeySpans.forEach(span => {
+                            const keyText = span.textContent.trim();
+                            if (keyboardMap[keyText]) {
+                                span.textContent = keyboardMap[keyText];
+                            }
+                        });
+                    }
+                }
+
+                tooltip.setAttribute('data-ru-localized', 'true');
             });
         }
 
@@ -531,7 +714,12 @@
          * локализация приветствия с учётом времени суток
          */
         localizeGreeting() {
-            const greetingElements = document.querySelectorAll('.h2.prc-Heading-Heading-6CmGO');
+            // поддержка нескольких вариантов классов
+            const selectors = [
+                '.h2.prc-Heading-Heading-6CmGO',
+                '.h2.prc-Heading-Heading-MtWFE'
+            ];
+            const greetingElements = document.querySelectorAll(selectors.join(', '));
             
             greetingElements.forEach(el => {
                 const text = el.textContent.trim();
@@ -651,14 +839,34 @@
             attachmentButtons.forEach(button => {
                 this.localizeByText(button, 'Add repositories, files, and spaces', 'add-repositories-files-spaces');
             });
+
+            // кнопка режима Ask/Task. Без защиты, чтобы динамически менялось
+            const askTaskTranslations = [
+                { original: 'Ask', key: 'ask' },
+                { original: 'Task', key: 'task' }
+            ];
+            const modeButtons = document.querySelectorAll('.ChatInput-module__modeSelectButton__gV9F1kA .prc-Button-Label-FWkx3');
+            modeButtons.forEach(button => {
+                this.localizeByTextDynamic(button, askTaskTranslations);
+            });
+
+            // Ask/Task во всплывающем меню
+            const menuLabels = document.querySelectorAll('.prc-ActionList-ItemLabel-81ohH');
+            menuLabels.forEach(label => {
+                this.localizeByTextDynamic(label, askTaskTranslations);
+            });
         }
 
         /**
          * локализация меток и статусов
          */
         localizeLabelsStatusesAndLinks() {
-            // метка о предварительной версии
-            const previewLabels = document.querySelectorAll('.prc-Label-Label--LG6X[data-size="small"][data-variant="success"]');
+            // метка о предварительной версии (старый и новый селекторы)
+            const previewSelectors = [
+                '.prc-Label-Label--LG6X[data-size="small"][data-variant="success"]',
+                '.prc-Label-Label-qG-Zu[data-size="small"][data-variant="success"]'
+            ];
+            const previewLabels = document.querySelectorAll(previewSelectors.join(', '));
             previewLabels.forEach(label => {
                 this.localizeByText(label, 'Preview', 'preview');
             });
@@ -668,14 +876,22 @@
                 this.localizeByText(label, 'Preview', 'preview');
             });
 
-            // метка New («Новинка»)
-            const newLabels = document.querySelectorAll('.prc-Label-Label--LG6X[data-size="small"][data-variant="accent"]');
+            // метка New («Новинка»), старый и новый селекторы
+            const newSelectors = [
+                '.prc-Label-Label--LG6X[data-size="small"][data-variant="accent"]',
+                '.prc-Label-Label-qG-Zu[data-size="small"][data-variant="accent"]'
+            ];
+            const newLabels = document.querySelectorAll(newSelectors.join(', '));
             newLabels.forEach(label => {
                 this.localizeByText(label, 'New', 'new');
             });
 
-            // метка Free («Бесплатно»)
-            const freeLabels = document.querySelectorAll('.prc-Label-Label--LG6X[data-size="small"][data-variant="primary"]');
+            // метка Free («Бесплатно»), старый и новый селекторы
+            const freeSelectors = [
+                '.prc-Label-Label--LG6X[data-size="small"][data-variant="primary"]',
+                '.prc-Label-Label-qG-Zu[data-size="small"][data-variant="primary"]'
+            ];
+            const freeLabels = document.querySelectorAll(freeSelectors.join(', '));
             freeLabels.forEach(label => {
                 this.localizeByText(label, 'Free', 'free');
             });
@@ -686,7 +902,12 @@
                 this.localizeByText(link, 'Feedback', 'feedback');
             });
 
-            const linkButtons = document.querySelectorAll('button.prc-Link-Link-85e08');
+            // кнопки Give feedback и Switch back (старый и новый селекторы)
+            const linkButtonSelectors = [
+                'button.prc-Link-Link-85e08',
+                'button.prc-Link-Link-9ZwDx'
+            ];
+            const linkButtons = document.querySelectorAll(linkButtonSelectors.join(', '));
             linkButtons.forEach(button => {
                 this.localizeByText(button, 'Give feedback', 'give-feedback');
                 this.localizeByText(button, 'Switch back', 'switch-back');
@@ -734,12 +955,17 @@
          */
         localizeCommandPills() {
             const commandTranslations = [
-                { text: 'Task', key: 'task' },
+                { text: 'Task', key: 'cw3-task' },
                 { text: 'Create issue', key: 'create-issue' },
                 { text: 'Spark', key: 'spark' }
             ];
 
-            const commandPills = document.querySelectorAll('.CommandPill-module__text--ggGhT');
+            // старый и новый селекторы
+            const commandPillSelectors = [
+                '.CommandPill-module__text--ggGhT',
+                '.CommandPill-module__text__degaI4N'
+            ];
+            const commandPills = document.querySelectorAll(commandPillSelectors.join(', '));
             commandPills.forEach(pill => {
                 commandTranslations.forEach(({ text, key }) => {
                     this.localizeByText(pill, text, key);
@@ -1201,7 +1427,7 @@
         }
 
         /**
-         * локализация агентской панели
+         * локализация агентной панели
          */
         localizeCopilotTaskScreen() {
             // «Start a new task with Copilot»
@@ -1910,6 +2136,7 @@
             this.localizeDashboard();
             this.localizeSearchPlaceholder();
             this.localizeTooltips();
+            this.localizeAppHeaderTooltips();
             this.localizeAllTooltips();
             this.localizeActionListItems();
             this.localizeGreeting();
