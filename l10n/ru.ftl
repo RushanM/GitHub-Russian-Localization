@@ -312,55 +312,120 @@ month-adj-december-m = Декабрьский
 month-adj-december-f = Декабрьская
 month-adj-december-n = Декабрьское
 
-### Фразы для перевода частей заголовков
-headline-phrase-hosted-runners = размещённые исполнители
-headline-phrase-github-hosted-runners-usage = размещённые исполнители GitHub
-headline-phrase-private-repositories = закрытые репозитории
-headline-phrase-public-repositories = открытые репозитории
-headline-phrase-pull-request-files = файлы запроса на слияние
-headline-phrase-pull-requests-files = файлы запросов на слияние
-headline-phrase-pull-request = запрос на слияние
-headline-phrase-unchanged-lines = неизменённые строки
-headline-phrase-agents-tab-in-your-repository = вкладку «Агенты» в вашем репозитории
-headline-phrase-agents-tab = вкладку «Агенты»
-headline-phrase-your-repository = вашем репозитории
-headline-phrase-artifact-metadata = метаданные артефактов
-headline-phrase-fine-grained-permission-for-artifact-metadata = детализированное разрешение для метаданных артефактов
-headline-phrase-cache-entries = записи кеша
-headline-phrase-actions-cache-entries = записи кеша Actions
-headline-phrase-cost-center-usage = использование центров затрат
-headline-phrase-extended-metadata = расширенные метаданные
-headline-phrase-secret-scanning-extended-metadata = Расширенные метаданные сканирования секретов
-headline-phrase-certain-repositories = определённых репозиториев
-headline-phrase-file-handling = обработку файлов
-headline-phrase-minified-javascript = минифицированного JavaScript
-headline-phrase-comment-commands = командами в комментариях
-headline-phrase-with-data-residency = с локализацией хранения данных
-headline-phrase-data-residency = локализацией хранения данных
-headline-phrase-supply-chain = цепочку поставок
-headline-phrase-code-to-cloud-traceability = сквозной отслеживаемостью кода
-headline-phrase-slsa-build-level-3-security = безопасностью SLSA уровня сборки 3
-headline-phrase-authentication = аутентификацию
-headline-phrase-oidc-authentication = OIDC-аутентификацию
-headline-phrase-tool-calls = вызовов инструментов
-headline-phrase-copilot-chat = чата Copilot
-headline-phrase-on-the-web = в веб-версии
-headline-phrase-other-improvements = другие улучшения
-headline-product-github-mobile = Мобильное приложение GitHub
+### Полные заголовки
+hl-showing-tool-calls-copilot-web = Отображение вызовов инструментов и другие улучшения чата Copilot в веб-версии
+hl-docker-compose-version-upgrades = Обновление версий Docker и «Docker Compose» на размещаемых исполнителях
+hl-codespaces-public-preview-enterprise = Теперь подписчикам «GitHub Enterprise» доступны кодовые пространства с резидентностью данных в рамках публичной предварительной версии
+hl-codeql-adds-swift-dotnet-support = В CodeQL 2.24.0 добавлена поддержка Swift 6.2 и .NET 10, а также улучшена обработка минифицированного кода JavaScript
+hl-copilot-metrics-enterprise-cloud = Теперь подписчикам «GitHub Enterprise Cloud» доступны метрики Copilot с резидентностью данных в рамках публичной предварительной версии
+hl-github-actions-smarter-editing = Автодействия GitHub: более умное редактирование, более понятная отладка и новая функция case
+hl-arm64-runners-private-repos = Теперь для приватных репозиториев доступны стандартные исполнители на arm64
+hl-claude-codex-public-preview = Claude и Codex теперь доступны в публичной предварительной версии на GitHub
+hl-dependabot-oidc-auth = Dependabot теперь поддерживает OIDC-аутентификацию
+hl-dependabot-proxy-opensource = Dependabot Proxy стал открытым ПО с лицензией MIT
+hl-github-mobile-comment-unchanged = Мобильное приложение: комментирование неизменённых строк в файлах запросов на слияние
 
-### Описания после двоеточия
-headline-desc-smarter-editing-clearer-debugging = улучшенное редактирование, понятная отладка и новая функция case
-headline-desc-plan-before-you-build = планируйте до разработки, направляйте по ходу
-headline-desc-enhanced-agents-context = улучшенные агенты, управление контекстом и новые способы установки
-headline-desc-comment-on-unchanged-lines = комментирование неизменённых строк в файлах запросов на слияние
-headline-desc-new-projects-tools-oauth = новые инструменты Projects, фильтрация областей OAuth и новые возможности
-headline-desc-byok-enhancements = улучшения для использования собственных ключей (BYOK)
+### Длинные комбинации (10+ слов)
+hl-showing-tool-calls-other-improvements-copilot-chat-on-the-web = Отображение вызовов инструментов и другие улучшения чата Copilot в веб-версии
+hl-and-other-improvements-to-copilot-chat-on-the-web = и другие улучшения чата Copilot в веб-версии
+hl-other-improvements-to-copilot-chat-on-the-web = другие улучшения чата Copilot в веб-версии
+hl-is-now-in-public-preview-for-github-enterprise-with-data-residency = теперь доступно подписчикам «GitHub Enterprise» с резидентностью данных в рамках публичной предварительной версии
+hl-in-public-preview-for-github-enterprise-with-data-residency = в рамках публичной предварительной версии для «GitHub Enterprise» с резидентностью данных
+hl-for-github-enterprise-with-data-residency = для «GitHub Enterprise» с резидентностью данных
+hl-github-enterprise-with-data-residency = «GitHub Enterprise» с резидентностью данных
+hl-github-enterprise-cloud-with-data-residency = «GitHub Enterprise Cloud» с резидентностью данных
+hl-with-data-residency-in-public-preview = с резидентностью данных в рамках публичной предварительной версии
 
-### Фразы управления
-headline-control-who-can-request-apps = тем, кто может запрашивать приложения для вашей организации
+### Средние комбинации (5—9 слов)
+hl-showing-tool-calls-and-other-improvements = Отображение вызовов инструментов и другие улучшения
+hl-tool-calls-and-other-improvements = вызовов инструментов и другие улучшения
+hl-and-other-improvements-to = и другие улучшения
+hl-other-improvements-to = другие улучшения
+hl-copilot-chat-on-the-web = чата Copilot в веб-версии
+hl-are-now-available-in-public-preview = теперь доступны в публичной предварительной версии
+hl-is-now-available-in-public-preview = теперь доступен в публичной предварительной версии
+hl-in-public-preview-on-github = в публичной предварительной версии на GitHub
+hl-is-now-in-public-preview-for = теперь доступно в рамках публичной предварительной версии для
+hl-is-now-in-public-preview = теперь в публичной предварительной версии
+hl-in-public-preview = в публичной предварительной версии
+hl-public-preview = публичная предварительная версия
+hl-version-upgrades-on-hosted-runners = обновление версий на размещаемых исполнителях
+hl-upgrades-on-hosted-runners = обновления на размещаемых исполнителях
+hl-on-hosted-runners = на размещаемых исполнителях
+hl-are-now-available-in-private-repositories = теперь доступны для приватных репозиториев
+hl-in-private-repositories = для приватных репозиториев
+hl-private-repositories = приватные репозитории
+hl-smarter-editing-clearer-debugging = более умное редактирование, более понятная отладка
+hl-and-a-new-case-function = и новая функция case
+hl-a-new-case-function = новая функция case
+hl-file-handling-for-minified-javascript = обработка минифицированного кода JavaScript
+hl-for-minified-javascript = минифицированного кода JavaScript
+hl-minified-javascript = минифицированный код JavaScript
 
-### Тексты предупреждений
-headline-warning-act-on-your-behalf = действует от вашего имени
+### Короткие комбинации (2—4 слова)
+hl-showing-tool-calls = Отображение вызовов инструментов
+hl-tool-calls = вызовы инструментов
+hl-and-other = и другие
+hl-other-improvements = другие улучшения
+hl-improvements-to = улучшения
+hl-copilot-chat = чата Copilot
+hl-chat-on = чата в
+hl-on-the-web = в веб-версии
+hl-the-web = веб-версии
+hl-docker-and-docker-compose = Docker и «Docker Compose»
+hl-and-docker-compose = и «Docker Compose»
+hl-docker-compose = «Docker Compose»
+hl-version-upgrades = обновление версий
+hl-hosted-runners = размещаемые исполнители
+hl-standard-runners = стандартные исполнители
+hl-arm64-standard-runners = стандартные исполнители на arm64
+hl-now-available = теперь доступно
+hl-are-now-available = теперь доступны
+hl-is-now-available = теперь доступен
+hl-with-data-residency = с резидентностью данных
+hl-data-residency = резидентность данных
+hl-now-supports = теперь поддерживает
+hl-oidc-authentication = OIDC-аутентификацию
+hl-is-now-open-source = стал открытым ПО
+hl-open-source = открытое ПО
+hl-mit-license = лицензия MIT
+hl-with-an-mit-license = с лицензией MIT
+hl-and-improves = а также улучшена
+hl-and-improves-file-handling = а также улучшена обработка
+hl-file-handling = обработка файлов
+hl-adds-support = добавлена поддержка
+hl-support-and = поддержка и
+hl-unchanged-lines = неизменённые строки
+hl-pull-request-files = файлы запросов на слияние
+hl-comment-on = комментирование
+hl-comment-on-unchanged-lines = комментирование неизменённых строк
 
-### Функции уровня предприятия
-headline-enterprise-budgets-exclude-cost = Бюджеты уровня предприятия, исключающие использование центров затрат
+### Отдельные названия в заголовках
+hl-github-actions = Автодействия GitHub
+hl-github-mobile = Мобильное приложение GitHub
+hl-github-enterprise = «GitHub Enterprise»
+hl-github-enterprise-cloud = «GitHub Enterprise Cloud»
+hl-github-copilot = GitHub Copilot
+hl-codespaces = кодовые пространства
+hl-dependabot = Dependabot
+hl-dependabot-proxy = Dependabot Proxy
+hl-codeql = CodeQL
+hl-copilot-metrics = метрики Copilot
+hl-claude-and-codex = Claude и Codex
+
+### Глаголы и связующие слова в заголовках
+hl-and = и
+hl-for = для
+hl-to = к
+hl-in = в
+hl-on = на
+hl-with = с
+hl-the = 
+hl-is = 
+hl-are = 
+hl-now = теперь
+hl-adds = добавлена
+hl-improves = улучшена
+hl-supports = поддерживает
+hl-available = доступно
+hl-showing = Отображение
