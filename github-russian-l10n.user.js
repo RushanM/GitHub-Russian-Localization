@@ -18,7 +18,7 @@
 // @namespace       githubrussianlocalization
 // @supportURL      https://github.com/RushanM/GitHub-Russian-Localization/issues
 // @updateURL       https://github.com/RushanM/GitHub-Russian-Localization/raw/master/github-russian-l10n.user.js
-// @version         P36
+// @version         P37
 // ==/UserScript==
 
 (function() {
@@ -2130,6 +2130,43 @@
         }
 
         /**
+         * локализация заголовков новостей GitHub
+         * работает на страницах ленты событий (github.com) и журнала изменений (github.blog/changelog)
+         */
+        localizeNewsHeadlines() {
+            // создаём переводчик заголовков
+            if (!this.headlineTranslator) {
+                this.headlineTranslator = new NewsHeadlineTranslator(this.parser);
+            }
+
+            // селекторы для заголовков новостей
+            // на странице ленты событий github.com
+            const feedHeadlines = document.querySelectorAll('.dashboard-changelog a.Link--primary.Link');
+            
+            // на странице журнала изменений github.blog/changelog
+            const changelogHeadlines = document.querySelectorAll('a.ChangelogItem-title');
+
+            // объединяем все заголовки
+            const allHeadlines = [...feedHeadlines, ...changelogHeadlines];
+
+            allHeadlines.forEach(headline => {
+                // пропускаем уже переведённые
+                if (headline.hasAttribute('data-ru-headline-translated')) {
+                    return;
+                }
+
+                const originalText = headline.textContent.trim();
+                const translatedText = this.headlineTranslator.translate(originalText);
+
+                if (translatedText) {
+                    headline.textContent = translatedText;
+                    headline.setAttribute('data-ru-headline-translated', 'true');
+                    headline.setAttribute('data-ru-headline-original', originalText);
+                }
+            });
+        }
+
+        /**
          * запуск локализации всех поддерживаемых элементов
          */
         localize() {
@@ -2157,6 +2194,7 @@
             this.localizeRelativeTime();
             this.localizeCookiePreferencesPage();
             this.localizeFooter();
+            this.localizeNewsHeadlines();
         }
 
         /**
@@ -2195,6 +2233,335 @@
             if (this.observer) {
                 this.observer.disconnect();
             }
+        }
+    }
+
+    /**
+     * переводчик заголовков новостей GitHub
+     * машинный перевод через словарь комбинаций фраз (от длинных к коротким)
+     */
+    class NewsHeadlineTranslator {
+        constructor(ftlParser) {
+            this.ftlParser = ftlParser;
+            
+            // инициализация словарей из FTL
+            this.initFullHeadlines();
+            this.initPhrasesDictionary();
+            this.initMonths();
+        }
+
+        /**
+         * инициализация словаря полных заголовков (точные совпадения)
+         */
+        initFullHeadlines() {
+            // словарь ключей FTL для полных заголовков
+            this.fullHeadlines = {
+                // исходные заголовки
+                'Showing tool calls and other improvements to Copilot chat on the web': 'hl-showing-tool-calls-copilot-web',
+                'Docker and Docker Compose version upgrades on hosted runners': 'hl-docker-compose-version-upgrades',
+                'Codespaces is now in public preview for GitHub Enterprise with data residency': 'hl-codespaces-public-preview-enterprise',
+                'CodeQL 2.24.0 adds Swift 6.2 and .NET 10 support, and improves file handling for minified JavaScript': 'hl-codeql-adds-swift-dotnet-support',
+                'Copilot metrics in GitHub Enterprise Cloud with data residency in public preview': 'hl-copilot-metrics-enterprise-cloud',
+                'GitHub Actions: Smarter editing, clearer debugging, and a new case function': 'hl-github-actions-smarter-editing',
+                'arm64 standard runners are now available in private repositories': 'hl-arm64-runners-private-repos',
+                'Claude and Codex are now available in public preview on GitHub': 'hl-claude-codex-public-preview',
+                'Dependabot now supports OIDC authentication': 'hl-dependabot-oidc-auth',
+                'The Dependabot Proxy is now open source with an MIT license': 'hl-dependabot-proxy-opensource',
+                'GitHub Mobile: Comment on unchanged lines in pull request files': 'hl-github-mobile-comment-unchanged',
+                'Closing down notice of legacy Copilot metrics APIs': 'hl-closing-down-notice-of-legacy-copilot-metrics-apis',
+                'Improved search for GitHub Issues in public preview': 'hl-improved-search-for-github-issues-in-public-preview',
+                'ACP support in Copilot CLI is now in public preview': 'hl-acp-support-in-copilot-cli-is-now-in-public-preview',
+                'GitHub MCP Server: New Projects tools, OAuth scope filtering, and new features': 'hl-github-mcp-server-new-projects-tools-oauth',
+                'Changes to GitHub Dependabot pull request comment commands': 'hl-changes-to-github-dependabot-pull-request-comment-commands',
+                'Introducing the Agents tab in your repository': 'hl-introducing-agents-tab-in-your-repository',
+                'GPT-5.2-Codex is now available in Visual Studio, JetBrains IDEs, Xcode, and Eclipse': 'hl-gpt52codex-available-in-ides',
+                'Improved pull request “Files changed” page on by default': 'hl-improved-files-changed-on-by-default'
+            };
+        }
+
+        /**
+         * инициализация словаря комбинаций фраз из FTL
+         * порядок: от самых длинных к самым коротким
+         */
+        initPhrasesDictionary() {
+            // массив комбинаций фраз, отсортированный по длине (от длинных к коротким)
+            // формат: [английская фраза, ключ FTL]
+            const phrasesConfig = [
+                // очень длинные комбинации (10+ слов)
+                ['Showing tool calls and other improvements to Copilot chat on the web', 'hl-showing-tool-calls-other-improvements-copilot-chat-on-the-web'],
+                ['and other improvements to Copilot chat on the web', 'hl-and-other-improvements-to-copilot-chat-on-the-web'],
+                ['other improvements to Copilot chat on the web', 'hl-other-improvements-to-copilot-chat-on-the-web'],
+                ['is now in public preview for GitHub Enterprise with data residency', 'hl-is-now-in-public-preview-for-github-enterprise-with-data-residency'],
+                ['in public preview for GitHub Enterprise with data residency', 'hl-in-public-preview-for-github-enterprise-with-data-residency'],
+                ['for GitHub Enterprise with data residency', 'hl-for-github-enterprise-with-data-residency'],
+                ['GitHub Enterprise with data residency', 'hl-github-enterprise-with-data-residency'],
+                ['GitHub Enterprise Cloud with data residency', 'hl-github-enterprise-cloud-with-data-residency'],
+                ['with data residency in public preview', 'hl-with-data-residency-in-public-preview'],
+                
+                // средние комбинации (5-9 слов)
+                ['Showing tool calls and other improvements', 'hl-showing-tool-calls-and-other-improvements'],
+                ['tool calls and other improvements', 'hl-tool-calls-and-other-improvements'],
+                ['and other improvements to', 'hl-and-other-improvements-to'],
+                ['other improvements to', 'hl-other-improvements-to'],
+                ['Copilot chat on the web', 'hl-copilot-chat-on-the-web'],
+                ['are now available in public preview on GitHub', 'hl-are-now-available-in-public-preview'],
+                ['is now available in public preview on GitHub', 'hl-is-now-available-in-public-preview'],
+                ['in public preview on GitHub', 'hl-in-public-preview-on-github'],
+                ['is now in public preview for', 'hl-is-now-in-public-preview-for'],
+                ['is now in public preview', 'hl-is-now-in-public-preview'],
+                ['in public preview', 'hl-in-public-preview'],
+                ['public preview', 'hl-public-preview'],
+                ['version upgrades on hosted runners', 'hl-version-upgrades-on-hosted-runners'],
+                ['upgrades on hosted runners', 'hl-upgrades-on-hosted-runners'],
+                ['on hosted runners', 'hl-on-hosted-runners'],
+                ['are now available in private repositories', 'hl-are-now-available-in-private-repositories'],
+                ['in private repositories', 'hl-in-private-repositories'],
+                ['private repositories', 'hl-private-repositories'],
+                ['Smarter editing, clearer debugging', 'hl-smarter-editing-clearer-debugging'],
+                ['and a new case function', 'hl-and-a-new-case-function'],
+                ['a new case function', 'hl-a-new-case-function'],
+                ['file handling for minified JavaScript', 'hl-file-handling-for-minified-javascript'],
+                ['for minified JavaScript', 'hl-for-minified-javascript'],
+                ['minified JavaScript', 'hl-minified-javascript'],
+                
+                // короткие комбинации (2-4 слова)
+                ['Showing tool calls', 'hl-showing-tool-calls'],
+                ['tool calls', 'hl-tool-calls'],
+                ['and other', 'hl-and-other'],
+                ['other improvements', 'hl-other-improvements'],
+                ['improvements to', 'hl-improvements-to'],
+                ['Copilot chat', 'hl-copilot-chat'],
+                ['chat on', 'hl-chat-on'],
+                ['on the web', 'hl-on-the-web'],
+                ['the web', 'hl-the-web'],
+                ['Docker and Docker Compose', 'hl-docker-and-docker-compose'],
+                ['and Docker Compose', 'hl-and-docker-compose'],
+                ['Docker Compose', 'hl-docker-compose'],
+                ['version upgrades', 'hl-version-upgrades'],
+                ['hosted runners', 'hl-hosted-runners'],
+                ['standard runners', 'hl-standard-runners'],
+                ['arm64 standard runners', 'hl-arm64-standard-runners'],
+                ['now available', 'hl-now-available'],
+                ['are now available', 'hl-are-now-available'],
+                ['is now available', 'hl-is-now-available'],
+                ['with data residency', 'hl-with-data-residency'],
+                ['data residency', 'hl-data-residency'],
+                ['now supports', 'hl-now-supports'],
+                ['OIDC authentication', 'hl-oidc-authentication'],
+                ['is now open source', 'hl-is-now-open-source'],
+                ['open source', 'hl-open-source'],
+                ['MIT license', 'hl-mit-license'],
+                ['with an MIT license', 'hl-with-an-mit-license'],
+                ['and improves', 'hl-and-improves'],
+                ['and improves file handling', 'hl-and-improves-file-handling'],
+                ['file handling', 'hl-file-handling'],
+                ['adds support', 'hl-adds-support'],
+                ['support and', 'hl-support-and'],
+                ['unchanged lines', 'hl-unchanged-lines'],
+                ['pull request files', 'hl-pull-request-files'],
+                ['Comment on', 'hl-comment-on'],
+                ['Comment on unchanged lines', 'hl-comment-on-unchanged-lines'],
+                
+                // новые комбинации для заголовков
+                ['Closing down notice of legacy', 'hl-closing-down-notice-of-legacy'],
+                ['Closing down notice of', 'hl-closing-down-notice-of'],
+                ['Closing down notice', 'hl-closing-down-notice'],
+                ['metrics APIs', 'hl-metrics-apis'],
+                ['Improved search for', 'hl-improved-search-for'],
+                ['Improved search', 'hl-improved-search'],
+                ['search for', 'hl-search-for'],
+                ['GitHub Issues', 'hl-github-issues'],
+                ['ACP support in', 'hl-acp-support-in'],
+                ['ACP support', 'hl-acp-support'],
+                ['Copilot CLI', 'hl-copilot-cli'],
+                ['GitHub MCP Server', 'hl-github-mcp-server'],
+                ['New Projects tools', 'hl-new-projects-tools'],
+                ['OAuth scope filtering', 'hl-oauth-scope-filtering'],
+                ['new features', 'hl-new-features'],
+                ['Changes to', 'hl-changes-to'],
+                ['pull request comment commands', 'hl-pull-request-comment-commands'],
+                ['comment commands', 'hl-comment-commands'],
+                ['Introducing the', 'hl-introducing-the'],
+                ['Introducing', 'hl-introducing'],
+                ['Agents tab in your repository', 'hl-agents-tab-in-your-repository'],
+                ['Agents tab', 'hl-agents-tab'],
+                ['in your repository', 'hl-in-your-repository'],
+                ['your repository', 'hl-your-repository'],
+                ['JetBrains IDEs', 'hl-jetbrains-ides'],
+                ['"Files changed" page', 'hl-files-changed-page'],
+                ['on by default', 'hl-on-by-default'],
+                ['by default', 'hl-by-default'],
+                
+                // названия продуктов
+                ['GitHub Actions', 'hl-github-actions'],
+                ['GitHub Mobile', 'hl-github-mobile'],
+                ['GitHub Enterprise Cloud', 'hl-github-enterprise-cloud'],
+                ['GitHub Enterprise', 'hl-github-enterprise'],
+                ['GitHub Copilot', 'hl-github-copilot'],
+                ['GitHub Dependabot', 'hl-github-dependabot'],
+                ['Codespaces', 'hl-codespaces'],
+                ['Dependabot Proxy', 'hl-dependabot-proxy'],
+                ['Dependabot', 'hl-dependabot'],
+                ['CodeQL', 'hl-codeql'],
+                ['Copilot metrics', 'hl-copilot-metrics'],
+                ['Claude and Codex', 'hl-claude-and-codex']
+                
+                // одиночные предлоги (and, for, to, in, on, with) обрабатываются в методе translatePrepositions()
+            ];
+            
+            // загружаем переводы из FTL и сортируем по длине (от длинных к коротким)
+            this.phrases = [];
+            for (const [eng, ftlKey] of phrasesConfig) {
+                const translation = this.ftlParser.getMessage(ftlKey);
+                if (translation !== null) {
+                    this.phrases.push({
+                        english: eng,
+                        russian: translation,
+                        length: eng.length
+                    });
+                }
+            }
+            
+            // сортировка по убыванию длины
+            this.phrases.sort((a, b) => b.length - a.length);
+            
+            // инициализация словаря предлогов (жёстко закодировано для сохранения пробелов)
+            this.prepositions = [
+                { english: / and /g, russian: ' и ' },
+                { english: /, and /g, russian: ' и ' },
+                { english: / for /g, russian: ' для ' },
+                { english: / to /g, russian: ' к ' },
+                { english: / in /g, russian: ' в ' },
+                { english: / on /g, russian: ' на ' },
+                { english: / with /g, russian: ' с ' }
+            ];
+        }
+
+        /**
+         * инициализация прилагательных месяцев из FTL
+         */
+        initMonths() {
+            const monthNames = ['january', 'february', 'march', 'april', 'may', 'june',
+                               'july', 'august', 'september', 'october', 'november', 'december'];
+            this.months = {};
+            
+            for (const month of monthNames) {
+                const capMonth = month.charAt(0).toUpperCase() + month.slice(1);
+                const m = this.ftlParser.getMessage(`month-adj-${month}-m`);
+                const f = this.ftlParser.getMessage(`month-adj-${month}-f`);
+                const n = this.ftlParser.getMessage(`month-adj-${month}-n`);
+                
+                if (m && f && n) {
+                    this.months[capMonth] = { m, f, n };
+                }
+            }
+        }
+
+        /**
+         * перевод заголовка новости
+         */
+        translate(headline) {
+            if (!headline || typeof headline !== 'string') {
+                return null;
+            }
+
+            const trimmedHeadline = headline.trim();
+            
+            // 1. Проверяем точное совпадение с полным заголовком
+            if (this.fullHeadlines[trimmedHeadline]) {
+                const ftlKey = this.fullHeadlines[trimmedHeadline];
+                const translation = this.ftlParser.getMessage(ftlKey);
+                if (translation) {
+                    return translation;
+                }
+            }
+            
+            // 2. Проверяем паттерны месячных релизов
+            const monthlyResult = this.translateMonthlyPattern(trimmedHeadline);
+            if (monthlyResult) {
+                return monthlyResult;
+            }
+            
+            // 3. Применяем замены комбинаций фраз (от длинных к коротким)
+            let result = trimmedHeadline;
+            for (const phrase of this.phrases) {
+                if (result.includes(phrase.english)) {
+                    result = result.replace(phrase.english, phrase.russian);
+                }
+            }
+            
+            // 4. Обрабатываем предлоги (с сохранением пробелов)
+            result = this.translatePrepositions(result);
+            
+            // проверяем, было ли что-то переведено
+            if (result !== trimmedHeadline) {
+                return this.postProcess(result);
+            }
+            
+            // если ничего не переведено, возвращаем null
+            return null;
+        }
+        
+        /**
+         * перевод предлогов с сохранением пробелов
+         */
+        translatePrepositions(text) {
+            let result = text;
+            for (const prep of this.prepositions) {
+                result = result.replace(prep.english, prep.russian);
+            }
+            return result;
+        }
+
+        /**
+         * обработка паттернов месячных релизов
+         */
+        translateMonthlyPattern(headline) {
+            // месячные релизы с версией
+            // «X in Y vN.N – Month Release» → «Месячный релиз — версия N.N «X» в «Y»»
+            const releaseMatch = headline.match(/^(.+?)\s+in\s+(.+?)\s+v([\d.]+)\s*[–—-]\s*(January|February|March|April|May|June|July|August|September|October|November|December)\s+Release$/i);
+            if (releaseMatch) {
+                const [, product, platform, version, month] = releaseMatch;
+                const monthAdj = this.months[month]?.m;
+                if (monthAdj) {
+                    return `${monthAdj} релиз — версия ${version} «${product}» в «${platform}»`;
+                }
+            }
+            
+            // месячные обновления
+            // «X in Y — Month update» → «Месячное обновление «X» в «Y»»
+            const updateMatch = headline.match(/^(.+?)\s+in\s+(.+?)\s*[–—-]\s*(January|February|March|April|May|June|July|August|September|October|November|December)\s+update$/i);
+            if (updateMatch) {
+                const [, product, platform, month] = updateMatch;
+                const monthAdj = this.months[month]?.n;
+                if (monthAdj) {
+                    return `${monthAdj} обновление «${product}» в «${platform}»`;
+                }
+            }
+            
+            return null;
+        }
+
+        /**
+         * постобработка переведённого заголовка
+         */
+        postProcess(result) {
+            // удаляем лишние пробелы
+            result = result.replace(/\s+/g, ' ').trim();
+            
+            // исправляем двойные пробелы вокруг знаков препинания
+            result = result.replace(/\s+([,.:;!?])/g, '$1');
+            result = result.replace(/([,.:;!?])\s+/g, '$1 ');
+            
+            // убираем пустые кавычки
+            result = result.replace(/«»/g, '');
+            
+            // первая буква заглавная
+            if (result.length > 0) {
+                result = result.charAt(0).toUpperCase() + result.slice(1);
+            }
+            
+            return result;
         }
     }
 
