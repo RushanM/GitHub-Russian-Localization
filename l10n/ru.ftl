@@ -6,7 +6,7 @@ homepage = Главная страница
 dashboard = Панель управления
 type-slash-to-search = Нажмите {{kbd}}, чтобы искать
 command-palette = Палитра команд
-chat-with-copilot = Перейти к общению с Копайлотом
+chat-with-copilot = Перейти к общению с Copilot
 open-agents-panel = Открыть агентную панель
 create-new = Создание
 your-issues = Ваши темы
@@ -66,8 +66,8 @@ spark = Блеснуть
 agent-sessions = Агентные сессии
 agent-sessions-options = Параметры агентных сессий
 
-## Список изменений Гитхаба 1
-latest-from-our-changelog = Последнее с нашего списка изменений
+## Журнал изменений Гитхаба 1
+latest-from-our-changelog = Последнее с нашего журнала изменений
 
 ## Форматы дат
 month-short-jan = янв.
@@ -103,7 +103,7 @@ no-sessions-found = Сессий не найдено. Попробуйте др�
 unable-to-load-agent = Не удалось загрузить агентные задачи. Попробуйте вернуться позже.
 
 ## Блок запросов на слияние 1
-open-in-copilot-chat = Закрепить в разговоре с Копайлотом
+open-in-copilot-chat = Закрепить в разговоре с Copilot
 ## Некогда здесь была «pull-requests = Запросы на слияние»
 view-all = Посмотреть все
 pull-request-options = Параметры запроса на слияние
@@ -117,13 +117,13 @@ show-more = Показать больше
 ## Блок запросов на слияние 2
 created-on = Создан
 
-## Список изменений Гитхаба 2
-view-changelog = Смотреть список изменений →
+## Журнал изменений Гитхаба 2
+view-changelog = Смотреть журнал изменений →
 
 ## Блок тем 1
 ## Некогда здесь была «issues = Темы»
 issue-options = Параметры темы
-assign-to-copilot = Делегировать Копайлоту
+assign-to-copilot = Делегировать Copilot
 issue-opened-by = Открыта
 issue-updated = Отредактирована
 issue-created-on = Создана
@@ -145,7 +145,7 @@ close-menu = Закрыть меню
 projects = Проекты
 discussions = Обсуждения
 codespaces = Кодовые пространства
-copilot = Копайлот
+copilot = Copilot
 explore = Обзор
 marketplace = Магазин
 mcp-registry = Реестр MCP
@@ -154,8 +154,8 @@ mcp-registry = Реестр MCP
 owners = Владельцы
 jump-to = Перейти
 ## Здесь была «repositories = Репозитории»
-chat-with-copilot = Написать Копайлоту
-start-copilot-thread = Начать новую беседу с Копайлотом
+chat-with-copilot = Написать Copilot
+start-copilot-thread = Начать новую беседу с Copilot
 search-syntax-tips = Статья о синтаксисе поиска
 switch-back = Переключиться обратно
 
@@ -180,13 +180,13 @@ agent = Агент
 auto = Автовыбор
 select-custom-agent = Выбрать своего агента
 start-task = Запустить выполнение задачи
-start-new-task-copilot = Начните новую задачу с Копайлотом
+start-new-task-copilot = Начните новую задачу с Copilot
 tasks-couldnt-be-loaded = Задачи не могут быть загружены
-copilot-task-description = Опишите задачу на разговорном языке. Копайлот начнёт работу в фоновом режиме и подаст запрос на слияние, ожидая вашего рассмотрения.
+copilot-task-description = Опишите задачу на разговорном языке. Copilot начнёт работу в фоновом режиме и подаст запрос на слияние, ожидая вашего рассмотрения.
 try-again-or = Попробуйте вернуться позже, либо, если проблема останется, свяжитесь со службой поддержки.
-learn-more-copilot-agent = Узнать больше о кодовом агенте Копайлота
+learn-more-copilot-agent = Узнать больше о кодовом агенте Copilot
 github-status = Статус GitHub
-copilot-uses-ai = [link]Копайлот[/link] использует ИИ. Проверяйте наличие ошибок.
+copilot-uses-ai = [link]Copilot[/link] использует ИИ. Проверяйте наличие ошибок.
 
 ## Меню создания
 new-issue = Создать новую тему
@@ -208,7 +208,7 @@ organizations = Организации
 enterprises = Предприятия
 sponsors = Спонсоры
 settings = Настройки
-copilot-settings = Настройки Копайлота
+copilot-settings = Настройки Copilot
 feature-preview = Тестируемые возможности
 appearance = Внешний вид
 accessibility = Доступность
@@ -271,3 +271,96 @@ save-changes = Сохранить изменения
 
 ## Всплывающее меню выбора репозитория агентной панели
 select-a-repository = Выберите репозиторий
+
+## Заголовки новостей
+
+### Прилагательные месяцев (мужской, женский, средний род)
+month-adj-january-m = Январский
+month-adj-january-f = Январская
+month-adj-january-n = Январское
+month-adj-february-m = Февральский
+month-adj-february-f = Февральская
+month-adj-february-n = Февральское
+month-adj-march-m = Мартовский
+month-adj-march-f = Мартовская
+month-adj-march-n = Мартовское
+month-adj-april-m = Апрельский
+month-adj-april-f = Апрельская
+month-adj-april-n = Апрельское
+month-adj-may-m = Майский
+month-adj-may-f = Майская
+month-adj-may-n = Майское
+month-adj-june-m = Июньский
+month-adj-june-f = Июньская
+month-adj-june-n = Июньское
+month-adj-july-m = Июльский
+month-adj-july-f = Июльская
+month-adj-july-n = Июльское
+month-adj-august-m = Августовский
+month-adj-august-f = Августовская
+month-adj-august-n = Августовское
+month-adj-september-m = Сентябрьский
+month-adj-september-f = Сентябрьская
+month-adj-september-n = Сентябрьское
+month-adj-october-m = Октябрьский
+month-adj-october-f = Октябрьская
+month-adj-october-n = Октябрьское
+month-adj-november-m = Ноябрьский
+month-adj-november-f = Ноябрьская
+month-adj-november-n = Ноябрьское
+month-adj-december-m = Декабрьский
+month-adj-december-f = Декабрьская
+month-adj-december-n = Декабрьское
+
+### Фразы для перевода частей заголовков
+headline-phrase-hosted-runners = размещённые исполнители
+headline-phrase-github-hosted-runners-usage = размещённые исполнители GitHub
+headline-phrase-private-repositories = закрытые репозитории
+headline-phrase-public-repositories = открытые репозитории
+headline-phrase-pull-request-files = файлы запроса на слияние
+headline-phrase-pull-requests-files = файлы запросов на слияние
+headline-phrase-pull-request = запрос на слияние
+headline-phrase-unchanged-lines = неизменённые строки
+headline-phrase-agents-tab-in-your-repository = вкладку «Агенты» в вашем репозитории
+headline-phrase-agents-tab = вкладку «Агенты»
+headline-phrase-your-repository = вашем репозитории
+headline-phrase-artifact-metadata = метаданные артефактов
+headline-phrase-fine-grained-permission-for-artifact-metadata = детализированное разрешение для метаданных артефактов
+headline-phrase-cache-entries = записи кеша
+headline-phrase-actions-cache-entries = записи кеша Actions
+headline-phrase-cost-center-usage = использование центров затрат
+headline-phrase-extended-metadata = расширенные метаданные
+headline-phrase-secret-scanning-extended-metadata = Расширенные метаданные сканирования секретов
+headline-phrase-certain-repositories = определённых репозиториев
+headline-phrase-file-handling = обработку файлов
+headline-phrase-minified-javascript = минифицированного JavaScript
+headline-phrase-comment-commands = командами в комментариях
+headline-phrase-with-data-residency = с локализацией хранения данных
+headline-phrase-data-residency = локализацией хранения данных
+headline-phrase-supply-chain = цепочку поставок
+headline-phrase-code-to-cloud-traceability = сквозной отслеживаемостью кода
+headline-phrase-slsa-build-level-3-security = безопасностью SLSA уровня сборки 3
+headline-phrase-authentication = аутентификацию
+headline-phrase-oidc-authentication = OIDC-аутентификацию
+headline-phrase-tool-calls = вызовов инструментов
+headline-phrase-copilot-chat = чата Copilot
+headline-phrase-on-the-web = в веб-версии
+headline-phrase-other-improvements = другие улучшения
+headline-product-github-mobile = Мобильное приложение GitHub
+
+### Описания после двоеточия
+headline-desc-smarter-editing-clearer-debugging = улучшенное редактирование, понятная отладка и новая функция case
+headline-desc-plan-before-you-build = планируйте до разработки, направляйте по ходу
+headline-desc-enhanced-agents-context = улучшенные агенты, управление контекстом и новые способы установки
+headline-desc-comment-on-unchanged-lines = комментирование неизменённых строк в файлах запросов на слияние
+headline-desc-new-projects-tools-oauth = новые инструменты Projects, фильтрация областей OAuth и новые возможности
+headline-desc-byok-enhancements = улучшения для использования собственных ключей (BYOK)
+
+### Фразы управления
+headline-control-who-can-request-apps = тем, кто может запрашивать приложения для вашей организации
+
+### Тексты предупреждений
+headline-warning-act-on-your-behalf = действует от вашего имени
+
+### Функции уровня предприятия
+headline-enterprise-budgets-exclude-cost = Бюджеты уровня предприятия, исключающие использование центров затрат
